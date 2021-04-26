@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import *
+from tkinter import messagebox
 
 
 
@@ -22,7 +23,6 @@ class PageHandler(tk.Tk):
 
         self.loginPage()
 
-        self.menuBar()
 
     def registerPage(self):
         self.resetWindow()
