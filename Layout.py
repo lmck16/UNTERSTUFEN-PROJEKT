@@ -92,7 +92,7 @@ class Layout(tk.Tk):
 
     def __setFigures(self, location, color):
         for i in range(len(location)):
-            self.__drawFigures(location[i][0], location[i][1], color)
+            self.__drawFigures(location[i][1], location[i][0], color)
             
 
     def __refreshDraw(self):
@@ -111,7 +111,7 @@ class Layout(tk.Tk):
         
 
     def __drawFigures(self, i, j, color):
-        loc = self.canvas.coords(self.board[i-1][j-1])
+        loc = self.canvas.coords(self.board[j-1][i-1])
 
         newCoords = [
             loc[0]+20,
@@ -139,16 +139,18 @@ class Layout(tk.Tk):
 
     def __isInArray(self, arr, i, j):
         for x in range(len(arr)):
-            if arr[x][0] == i and arr[x][1] == j:
+            if arr[x][0] == j and arr[x][1] == i:
                 return True
         return False
 
     def __figurePressed(self, event, i, j, color):
         if self.turn is True:
             if self.__isInArray(self.locationUser, i, j) is not True:
+                print("PLAYER : {}".format(self.locationUser))
                 return
         elif self.turn is not True:
             if self.__isInArray(self.locationKI, i, j) is not True:
+                print("KI : {}".format(self.locationKI))
                 return
         if not self.locked:
             print ("PRESSED ({}/{})".format(j, i))
@@ -163,7 +165,7 @@ class Layout(tk.Tk):
         #self.canvas.itemconfig(self.board[j-1][i-1], fill="#82827f")
         
         self.gameHandler(self.lockedJ, self.lockedI, j, i)
-        #self.resetBoard()
+        self.resetBoard()
         self.highlightField(j, i)
 
         self.locked = True
