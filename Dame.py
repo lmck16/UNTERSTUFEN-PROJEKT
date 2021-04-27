@@ -5,6 +5,8 @@ class Dame:
     # class-Variable für mögliche winning-condition
     end_game = [False, '']
 
+    displayname = "Dame"
+
     startKI = [[1,1],[2,2],[1,3],[2,4],[1,5],[2,6]]
     startPlayer = [[5,1],[6,2],[5,3],[6,4],[5,5],[6,6]]
 
@@ -18,6 +20,12 @@ class Dame:
                       ['x', ' ', 'x', ' ', 'x', ' ']]
         self.length = 6
         self.current_player = "x"
+
+    def getStartKI(self):
+        return self.startKI
+
+    def getStartPlayer(self):
+        return self.startPlayer
 
     def positionKI(self):
         return [[1,1],[2,2],[1,3],[2,4],[1,5],[2,6]]

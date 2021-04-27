@@ -19,7 +19,7 @@ class Layout(tk.Tk):
 
     n=6
 
-    def __init__(self, spiel="Bauernschach"):
+    def __init__(self, spiel, ttt = False):
         super().__init__()
         self.spiel = spiel
 
@@ -30,7 +30,7 @@ class Layout(tk.Tk):
         self.canvas = tk.Canvas(self, width=int(self.n*90), height=int(self.n*90))
         self.canvas.grid(row=0, column=0, columnspan=6, rowspan=6)
 
-        self.restartButton = tk.Button(self, text="{} neustarten".format(self.spiel), command=self.newBoard)
+        self.restartButton = tk.Button(self, text="{} neustarten".format(self.spiel.displayname), command=self.newBoard)
         self.restartButton.grid(row=7, column=0)
 
         self.board = [[None for row in range(self.n)] for col in range(self.n)]
@@ -38,8 +38,11 @@ class Layout(tk.Tk):
         self.fieldObj = [[None for row in range(self.n)] for col in range(self.n)]
         self.field = [[None for row in range(self.n)] for col in range(self.n)]
 
+        self.drawboard()
+        self.initFigures(self.spiel.getStartKI(), self.spiel.getStartPlayer())
+
     def setScoreToDisplay(self, ki, user):
-        self.title("{} - PUNKTE KI ({}) || PUNKTE USER ({})".format(self.spiel, ki, user))
+        self.title("{} - PUNKTE KI ({}) || PUNKTE USER ({})".format(self.spiel.displayname, ki, user))
 
     def drawboard(self):
         from itertools import cycle
@@ -55,7 +58,6 @@ class Layout(tk.Tk):
 
     def highlightField(self, j, i, color = "#3bbbea"):
         self.canvas.itemconfig(self.board[j-1][i-1], fill=color)
-
 
     def initFigures(self, locationKI, locationUser, colorKI = "#ffff00", colorUser = "#ff0000"):
         self.colorUser = colorUser
@@ -94,7 +96,6 @@ class Layout(tk.Tk):
         for i in range(len(location)):
             self.__drawFigures(location[i][1], location[i][0], color)
             
-
     def __refreshDraw(self):
         user = []
         ki = []
@@ -109,7 +110,6 @@ class Layout(tk.Tk):
         print(ki)
         self.initFigures(ki, user)
         
-
     def __drawFigures(self, i, j, color):
         loc = self.canvas.coords(self.board[j-1][i-1])
 
@@ -127,7 +127,6 @@ class Layout(tk.Tk):
 
         self.canvas.tag_bind(f"tile{i}{j}","<Button-1>", lambda e, i=i, j=j, color=color: self.__figurePressed(e,i,j, color))
         
-
     def moveFigure(self, oldI, oldJ, newI, newJ):
         self.__genCurrentField()
         self.field[oldI-1][oldJ-1] = self.field[newI-1][newJ-1]
@@ -211,11 +210,11 @@ class Layout(tk.Tk):
 
 def main():
 
-    board = Layout("Schach")
-    board.drawboard()
-
     new_game = Dame()
     new_game.print_board()
+
+    board = Layout(new_game)
+    board.drawboard()
 
     board.initFigures(new_game.startKI, new_game.startPlayer)
     board.drawFieldToConsole()
@@ -224,4 +223,4 @@ def main():
     board.mainloop()
 
 
-main()
+#main()

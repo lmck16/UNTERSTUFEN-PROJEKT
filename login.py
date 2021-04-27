@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import *
 from tkinter import messagebox
+from Dame import Dame
+from Layout import Layout
 
 
 
@@ -108,13 +110,13 @@ class PageHandler(tk.Tk):
         self.mainText = tk.Label(self, text="SPIELMODUS")
         self.mainText.grid(row=0, column=2)
 
-        self.bauernschachButton = tk.Button(self, text="BAUERNSCHACH", command=self.void, width = 15)
+        self.bauernschachButton = tk.Button(self, text="BAUERNSCHACH", command= lambda: self.startLayout("dame"), width = 15)
         self.bauernschachButton.grid(row=1, column=2)
 
-        self.dameButton = tk.Button(self, text="DAME", command=self.void, width = 15)
+        self.dameButton = tk.Button(self, text="DAME", command= lambda: self.startLayout("dame"), width = 15)
         self.dameButton.grid(row=2, column=2)
 
-        self.tictactoeButton = tk.Button(self, text="TIC-TAC-TOE", command=self.void, width = 15)
+        self.tictactoeButton = tk.Button(self, text="TIC-TAC-TOE", command= lambda: self.startLayout("dame"), width = 15)
         self.tictactoeButton.grid(row=3, column=2)
 
         self.backButton = tk.Button(self, text="<---", command=self.loginPage)
@@ -144,8 +146,14 @@ class PageHandler(tk.Tk):
     def login(self):
         self.gamemodePage()
 
-    def noLogin(self):
-        print("")
+    def noLogin(self, game):
+        self.gamemodePage()
+
+    def startLayout(self, game):
+        new_game = Dame()
+
+        board = Layout(new_game)
+        board.mainloop()
 
 def main():
     gui = PageHandler()
