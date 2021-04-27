@@ -1,5 +1,7 @@
+# TODO MELDUNG BEI SIEG
+
+
 import tkinter as tk
-from Dame import *
 import time
 
 class Layout(tk.Tk):
@@ -23,6 +25,11 @@ class Layout(tk.Tk):
         super().__init__()
         self.spiel = spiel
 
+        self.ttt = ttt
+
+        if self.ttt: self.colours[1] = self.colours[0]
+
+
         self.resizable(False,False)
         self.setScoreToDisplay(0,0)
         self.geometry("{}x{}".format(int((self.n*90)), int((self.n*90)+90)))
@@ -30,7 +37,7 @@ class Layout(tk.Tk):
         self.canvas = tk.Canvas(self, width=int(self.n*90), height=int(self.n*90))
         self.canvas.grid(row=0, column=0, columnspan=6, rowspan=6)
 
-        self.restartButton = tk.Button(self, text="{} neustarten".format(self.spiel.displayname), command=self.newBoard)
+        self.restartButton = tk.Button(self, text="{} neustarten".format(self.spiel.getDisplayname()), command=self.newBoard)
         self.restartButton.grid(row=7, column=0)
 
         self.board = [[None for row in range(self.n)] for col in range(self.n)]
@@ -41,8 +48,9 @@ class Layout(tk.Tk):
         self.drawboard()
         self.initFigures(self.spiel.getStartKI(), self.spiel.getStartPlayer())
 
+
     def setScoreToDisplay(self, ki, user):
-        self.title("{} - PUNKTE KI ({}) || PUNKTE USER ({})".format(self.spiel.displayname, ki, user))
+        self.title("{} - PUNKTE KI ({}) || PUNKTE USER ({})".format(self.spiel.getDisplayname(), ki, user))
 
     def drawboard(self):
         from itertools import cycle
@@ -87,7 +95,7 @@ class Layout(tk.Tk):
                 if self.board[i][j] is not None:
                     self.canvas.delete(self.board[i][j])
         self.drawboard()
-        self.initFigures(self.locationKI, self.locationUser, self.colorKI, self.colorUser)
+        self.initFigures(self.spiel.getPositionKI(), self.spiel.getPositionPlayer(), self.colorKI, self.colorUser)
 
         #self.locked = False
         #self.turn = not self.turn
@@ -124,7 +132,7 @@ class Layout(tk.Tk):
             self.figures[j-1][i-1] = self.canvas.create_rectangle(newCoords,fill=color, tags=f"tile{i}{j}")
         else:
             self.figures[j-1][i-1] = self.canvas.create_oval(newCoords,fill=color, tags=f"tile{i}{j}")
-
+        
         self.canvas.tag_bind(f"tile{i}{j}","<Button-1>", lambda e, i=i, j=j, color=color: self.__figurePressed(e,i,j, color))
         
     def moveFigure(self, oldI, oldJ, newI, newJ):
@@ -135,6 +143,7 @@ class Layout(tk.Tk):
 
     def gameHandler(self, figureJ, figureI, moveJ, moveI):
         print("MOVED ({}/{}) to ({}/{})".format(figureJ, figureI, moveJ, moveI))
+        self.spiel.makeMove(moveJ, moveI)
 
     def __isInArray(self, arr, i, j):
         for x in range(len(arr)):
@@ -143,20 +152,21 @@ class Layout(tk.Tk):
         return False
 
     def __figurePressed(self, event, i, j, color):
-        if self.turn is True:
-            if self.__isInArray(self.locationUser, i, j) is not True:
-                print("PLAYER : {}".format(self.locationUser))
-                return
-        elif self.turn is not True:
-            if self.__isInArray(self.locationKI, i, j) is not True:
-                print("KI : {}".format(self.locationKI))
-                return
-        if not self.locked:
-            print ("PRESSED ({}/{})".format(j, i))
-            self.canvas.itemconfig(self.figures[j-1][i-1], fill="#40ff00")
+        if self.ttt is False:
+            if self.turn is True:
+                if self.__isInArray(self.locationUser, i, j) is not True:
+                    print("PLAYER : {}".format(self.locationUser))
+                    return
+            elif self.turn is not True:
+                if self.__isInArray(self.locationKI, i, j) is not True:
+                    print("KI : {}".format(self.locationKI))
+                    return
+            if not self.locked:
+                print ("PRESSED ({}/{})".format(j, i))
+                self.canvas.itemconfig(self.figures[j-1][i-1], fill="#40ff00")
 
-            self.lockedI = i
-            self.lockedJ = j
+                self.lockedI = i
+                self.lockedJ = j
 
     def __keyDown(self, event, i, j):
         print ("PRESSED ({}/{})".format(j, i))
@@ -166,6 +176,8 @@ class Layout(tk.Tk):
         self.gameHandler(self.lockedJ, self.lockedI, j, i)
         self.resetBoard()
         self.highlightField(j, i)
+
+        if self.spiel.checkWin(): print("JEMAND GEWONNEN")
 
         self.locked = True
 

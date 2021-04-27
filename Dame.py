@@ -21,6 +21,9 @@ class Dame:
         self.length = 6
         self.current_player = "x"
 
+    def getDisplayname(self):
+        return self.displayname
+
     def getStartKI(self):
         return self.startKI
 

@@ -1,8 +1,6 @@
 import tkinter as tk
 from tkinter import *
 from tkinter import messagebox
-from Dame import Dame
-from Layout import Layout
 
 
 
@@ -116,7 +114,7 @@ class PageHandler(tk.Tk):
         self.dameButton = tk.Button(self, text="DAME", command= lambda: self.startLayout("dame"), width = 15)
         self.dameButton.grid(row=2, column=2)
 
-        self.tictactoeButton = tk.Button(self, text="TIC-TAC-TOE", command= lambda: self.startLayout("dame"), width = 15)
+        self.tictactoeButton = tk.Button(self, text="TIC-TAC-TOE", command= lambda: self.startLayout("ttt"), width = 15)
         self.tictactoeButton.grid(row=3, column=2)
 
         self.backButton = tk.Button(self, text="<---", command=self.loginPage)
@@ -150,10 +148,17 @@ class PageHandler(tk.Tk):
         self.gamemodePage()
 
     def startLayout(self, game):
-        new_game = Dame()
-
-        board = Layout(new_game)
-        board.mainloop()
+        from Layout import Layout
+        if game == "dame":
+            from Dame import Dame
+            new_game = Dame()
+            board = Layout(new_game)
+            board.mainloop()
+        elif game == "ttt":
+            from TicTacToe import TicTacToe
+            new_game = TicTacToe()
+            board = Layout(new_game, True)
+            board.mainloop()
 
 def main():
     gui = PageHandler()
