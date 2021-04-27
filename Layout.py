@@ -1,8 +1,8 @@
 # TODO MELDUNG BEI SIEG
-
+# TODO RESET NACH SPIELENDE
 
 import tkinter as tk
-import time
+from time import sleep
 
 class Layout(tk.Tk):
     colours = ["#fefefe", "#7f7f7f"]
@@ -89,13 +89,13 @@ class Layout(tk.Tk):
                     self.canvas.delete(self.board[i][j])
         self.drawboard()
     
-    def resetBoard(self):
+    def resetBoard(self, noFigures = False):
         for i in range(len(self.board)):
             for j in range(len(self.board)):
                 if self.board[i][j] is not None:
                     self.canvas.delete(self.board[i][j])
         self.drawboard()
-        self.initFigures(self.spiel.getPositionKI(), self.spiel.getPositionPlayer(), self.colorKI, self.colorUser)
+        if noFigures is False: self.initFigures(self.spiel.getPositionKI(), self.spiel.getPositionPlayer(), self.colorKI, self.colorUser)
 
         #self.locked = False
         #self.turn = not self.turn
@@ -177,7 +177,7 @@ class Layout(tk.Tk):
         self.resetBoard()
         self.highlightField(j, i)
 
-        if self.spiel.checkWin(): print("JEMAND GEWONNEN")
+        if self.spiel.checkWin(): self.showtime()
 
         self.locked = True
 
@@ -218,6 +218,14 @@ class Layout(tk.Tk):
             self.field[i][2],
             self.field[i][1],
             self.field[i][0]))
+
+    def showtime(self):
+        self.resetBoard(True)
+        for i in range(self.n):
+            for j in range(self.n):
+                if self.turn is True: self.highlightField(i, j, "#24fc03")
+                else: self.highlightField(i, j, "#ff0000")
+
 
 
 def main():
