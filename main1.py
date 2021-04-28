@@ -20,7 +20,7 @@ def move_player(board):
         move = [[start // 10, start % 10], [end // 10, end % 10]]
         # vergleichen ob Usereingabe ein gültiger Zug ist
         if move in possible_moves:
-            board.make_move(move)
+            board.makeMove(move)
             valid_move = True
 
 
@@ -31,7 +31,7 @@ def move_computer_random(board):
     print("Liste möglicher Züge: ")
     print(possible_moves)
 
-    board.make_move(random.choice(possible_moves))
+    board.makeMove(random.choice(possible_moves))
 
 
 if __name__ == "__main__":

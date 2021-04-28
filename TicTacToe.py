@@ -1,5 +1,3 @@
-# TODO DIAGONAL CHECK FÜR WIN
-# TODO KI ANBINDUNG
 class TicTacToe:
 
     displayname = "Tic Tac Toe"

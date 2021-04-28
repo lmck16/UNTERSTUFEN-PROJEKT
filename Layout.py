@@ -19,7 +19,10 @@ class Layout(tk.Tk):
     lockedI = 0
     lockedJ = 0
 
-    turn = False # TRUE = USER / FALSE = KI
+    winsKI = 0
+    winsPlayer = 0
+
+    turn = True # TRUE = USER / FALSE = KI
 
     n=6
 
@@ -36,7 +39,7 @@ class Layout(tk.Tk):
         self.KI = KI(self.spiel)
 
         self.resizable(False,False)
-        self.setScoreToDisplay(0,0)
+        self.setScoreToDisplay(self.winsKI,self.winsPlayer)
         self.geometry("{}x{}".format(int((self.n*90)), int((self.n*90)+90)))
 
         self.canvas = tk.Canvas(self, width=int(self.n*90), height=int(self.n*90))
@@ -71,6 +74,10 @@ class Layout(tk.Tk):
 
     def highlightField(self, j, i, color = "#3bbbea"):
         self.canvas.itemconfig(self.board[j-1][i-1], fill=color)
+        
+    def highlightMultipleFields(self, coords, color = "#3bbbea"):
+        for i in range(len(coords)):
+            self.highlightField(coords[i][1], coords[i][0], color)
 
     def initFigures(self, locationKI, locationUser, colorKI = "#ffff00", colorUser = "#ff0000"):
         self.colorUser = colorUser
@@ -150,7 +157,8 @@ class Layout(tk.Tk):
 
     def gameHandler(self, figureJ, figureI, moveJ, moveI):
         print("MOVED ({}/{}) to ({}/{})".format(figureJ, figureI, moveJ, moveI))
-        self.spiel.makeMove(moveJ, moveI)
+        if self.ttt: self.spiel.makeMove(moveJ, moveI)
+        else: self.spiel.makeMove([[figureJ, figureI], [moveJ, moveI]])
 
     def __isInArray(self, arr, i, j):
         for x in range(len(arr)):
@@ -159,51 +167,60 @@ class Layout(tk.Tk):
         return False
 
     def __figurePressed(self, event, i, j, color):
+        print ("__figurePressed ({}/{})".format(j, i))
+        self.resetBoard()
         if self.ttt is False:
             if self.turn is True:
-                if self.__isInArray(self.locationUser, i, j) is not True:
-                    print("PLAYER : {}".format(self.locationUser))
-                    return
-            elif self.turn is not True:
-                if self.__isInArray(self.locationKI, i, j) is not True:
-                    print("KI : {}".format(self.locationKI))
-                    return
-            if not self.locked:
-                print ("PRESSED ({}/{})".format(j, i))
-                self.canvas.itemconfig(self.figures[j-1][i-1], fill="#40ff00")
+                if self.__isInArray(self.spiel.getPositionPlayer(), i, j):
+                    print("PLAYER : {}".format(self.spiel.getPositionPlayer()))
+                    self.highlightMultipleFields(self.spiel.get_possible_moves_clicked(i, j))
+                    print(self.spiel.get_possible_moves_clicked(i, j))
+                    #return
 
-                self.lockedI = i
-                self.lockedJ = j
+                    self.canvas.itemconfig(self.figures[j][i], fill="#40ff00")
+
+                    self.lockedI = i
+                    self.lockedJ = j
+
+                    self.locked = True
 
     def __keyDown(self, event, i, j):
+        print ("__keyDown ({}/{})".format(j, i))
 
-        print ("PRESSED ({}/{})".format(j, i))
-        
-        #self.canvas.itemconfig(self.board[j-1][i-1], fill="#82827f")
-        
-        self.gameHandler(self.lockedJ, self.lockedI, j, i)
-        self.resetBoard()
-        
-
-        self.__checkWin()
-
-        if self.spiel.getTurn() is False:
-            tmp = self.KI.kiTurn()
-            self.gameHandler(self.lockedJ, self.lockedI, tmp[1], tmp[0])
+        if self.ttt:
+            self.gameHandler(self.lockedJ, self.lockedI, j, i)
             self.resetBoard()
+            
 
-        self.__checkWin()
+            self.__checkWin()
 
-        self.highlightField(j+1, i+1)
-        self.locked = True
+            if self.spiel.getTurn() is False:
+                tmp = self.KI.kiTurn()
+                self.gameHandler(self.lockedJ, self.lockedI, tmp[1], tmp[0])
+                self.resetBoard()
+
+            self.__checkWin()
+
+            self.highlightField(j+1, i+1)
+        elif self.locked:
+
+            self.locked = False
+
+            self.gameHandler(self.lockedJ, self.lockedI, j, i)
+
+            self.highlightField(j+1, i+1)
+
 
 
     def __checkWin(self):
         if self.spiel.checkWin():
             if self.spiel.getTurn() is False:
+                self.winsPlayer = self.winsPlayer + 1
                 messagebox.showinfo("GEWONNEN", "SIE HABEN GEWONNEN")
             else:
+                self.winsKI = self.winsKI + 1
                 messagebox.showinfo("VERLOREN", "SIE HABEN VERLOREN")
+            self.setScoreToDisplay(self.winsKI,self.winsPlayer)
             self.resetBoard(True)
             self.spiel.newGame()
             return

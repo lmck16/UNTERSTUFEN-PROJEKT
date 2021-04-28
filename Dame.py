@@ -8,8 +8,8 @@ class Dame:
 
     displayname = "Dame"
 
-    startKI = [[1, 1], [2, 2], [1, 3], [2, 4], [1, 5], [2, 6]]
-    startPlayer = [[5, 1], [6, 2], [5, 3], [6, 4], [5, 5], [6, 6]]
+    startKI = [[0, 0], [1, 1], [0, 2], [1, 3], [0, 4], [1, 5]]
+    startPlayer = [[4, 0], [5, 1], [4, 2], [5, 3], [4, 4], [5, 5]]
 
     # Feld initialisieren, aktuellen Spieler auf 'x' setzen
     def __init__(self):
@@ -31,11 +31,11 @@ class Dame:
     def getStartPlayer(self):
         return self.startPlayer
 
-    def positionKI(self):
-        return [[1, 1], [2, 2], [1, 3], [2, 4], [1, 5], [2, 6]]
+    def getPositionKI(self):
+        return [[0, 0], [1, 1], [0, 2], [1, 3], [0, 4], [1, 5]]
 
-    def positionPlayer(self):
-        return [[5, 1], [6, 2], [5, 3], [6, 4], [5, 5], [6, 6]]
+    def getPositionPlayer(self):
+        return [[4, 0], [5, 1], [4, 2], [5, 3], [4, 4], [5, 5]]
 
     # Konsolen-Ausgabe des Feldes
     def print_board(self):
@@ -71,7 +71,7 @@ class Dame:
             move = [end // 10, end % 10]
             # vergleichen ob Usereingabe ein gültiger Zug ist
             if move in possible_moves_clicked:
-                self.make_move([[start // 10, start % 10], move])
+                self.makeMove([[start // 10, start % 10], move])
                 valid_move = True
 
     def move_computer_random(self):
@@ -81,7 +81,7 @@ class Dame:
         print("Liste möglicher Züge: ")
         print(possible_moves)
 
-        self.make_move(random.choice(possible_moves))
+        self.makeMove(random.choice(possible_moves))
 
     # Konditionen für einen Sieg bestimmen
     # 1. Keine Züge mehr möglich
@@ -99,7 +99,7 @@ class Dame:
 
     # TODO: rekursion einbauen
     # TODO: minimax?!
-    def make_move(self, move):
+    def makeMove(self, move):
         start = [move[0][0], move[0][1]]
         end = [move[1][0], move[1][1]]
         self.board[end[0]][end[1]] = self.board[start[0]][start[1]]
