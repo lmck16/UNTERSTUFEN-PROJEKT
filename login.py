@@ -10,11 +10,14 @@ class PageHandler(tk.Tk):
 
     runningGames = []
 
+    board = None
+
     def __init__(self):
         super().__init__()
         self.resizable(False,False)
         self.geometry("{}x{}".format(330,200))
         self.title("UNTERSTUFEN PROJEKT")
+        self.protocol("WM_DELETE_WINDOW", self.__killAll)
 
         self.grid_columnconfigure(1, minsize=100)
         self.grid_columnconfigure(2, minsize=100)
@@ -25,6 +28,11 @@ class PageHandler(tk.Tk):
 
         self.loginPage()
 
+
+    def __killAll(self):
+        if self.board is not None:
+            self.board.destroy()
+        self.destroy()
 
     def registerPage(self):
         self.resetWindow()
@@ -150,17 +158,34 @@ class PageHandler(tk.Tk):
         self.gamemodePage()
 
     def startLayout(self, game):
+        self.backButton.config(state="disabled")
+        self.tictactoeButton.config(state="disabled")
+        self.dameButton.config(state="disabled")
+        self.bauernschachButton.config(state="disabled")
+        self.einstellungenButton.config(state="disabled")
+
         from Layout import Layout
         if game == "dame":
             from Dame import Dame
             new_game = Dame()
-            board = Layout(new_game)
-            board.mainloop()
+            self.board = Layout(new_game)
         elif game == "ttt":
             from TicTacToe import TicTacToe
             new_game = TicTacToe()
-            board = Layout(new_game, True)
-            board.mainloop()
+            self.board = Layout(new_game, True)
+
+        self.board.protocol("WM_DELETE_WINDOW", self.__on_closing)
+        self.board.mainloop()
+
+    def __on_closing(self):
+        self.backButton.config(state="active")
+        self.tictactoeButton.config(state="active")
+        self.dameButton.config(state="active")
+        self.bauernschachButton.config(state="active")
+        self.einstellungenButton.config(state="active")
+
+        self.board.destroy()
+        self.board = None
 
 def main():
     gui = PageHandler()

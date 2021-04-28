@@ -3,6 +3,8 @@
 
 import tkinter as tk
 from time import sleep
+from ki import KI
+from tkinter import messagebox
 
 class Layout(tk.Tk):
     colours = ["#fefefe", "#7f7f7f"]
@@ -31,6 +33,7 @@ class Layout(tk.Tk):
 
         if self.ttt: self.colours[1] = self.colours[0]
 
+        self.KI = KI(self.spiel)
 
         self.resizable(False,False)
         self.setScoreToDisplay(0,0)
@@ -174,24 +177,36 @@ class Layout(tk.Tk):
 
     def __keyDown(self, event, i, j):
 
-        if self.end:
-            self.spiel.newGame()
-            self.end = False
-
         print ("PRESSED ({}/{})".format(j, i))
         
         #self.canvas.itemconfig(self.board[j-1][i-1], fill="#82827f")
         
         self.gameHandler(self.lockedJ, self.lockedI, j, i)
         self.resetBoard()
+        
+
+        self.__checkWin()
+
+        if self.spiel.getTurn() is False:
+            tmp = self.KI.kiTurn()
+            self.gameHandler(self.lockedJ, self.lockedI, tmp[1], tmp[0])
+            self.resetBoard()
+
+        self.__checkWin()
+
         self.highlightField(j+1, i+1)
-
-        if self.spiel.checkWin(): 
-            self.showtime()
-            self.end = True
-
         self.locked = True
 
+
+    def __checkWin(self):
+        if self.spiel.checkWin():
+            if self.spiel.getTurn() is False:
+                messagebox.showinfo("GEWONNEN", "SIE HABEN GEWONNEN")
+            else:
+                messagebox.showinfo("VERLOREN", "SIE HABEN VERLOREN")
+            self.resetBoard(True)
+            self.spiel.newGame()
+            return
 
     def __genCurrentField(self):
         for i in range(self.n):
@@ -230,12 +245,6 @@ class Layout(tk.Tk):
             self.field[i][1],
             self.field[i][0]))
 
-    def showtime(self):
-        self.resetBoard(True)
-        for i in range(self.n):
-            for j in range(self.n):
-                if self.spiel.getTurn() is True: self.highlightField(i, j, self.colorKI)
-                else: self.highlightField(i, j, self.colorUser)
 
 
 

@@ -1,7 +1,5 @@
 # TODO DIAGONAL CHECK FÜR WIN
 # TODO KI ANBINDUNG
-
-
 class TicTacToe:
 
     displayname = "Tic Tac Toe"
@@ -14,11 +12,11 @@ class TicTacToe:
     symbolKI = "O"
     symbolPlayer = "X"
 
-    turn = False # TRUE = PLAYER / FALSE = KI
+    turn = True # TRUE = PLAYER / FALSE = KI
 
     def __init__(self):
         self.board = [[None for row in range(self.n)] for col in range(self.n)]
-        #self.print_board()
+        self.genBoard()
 
     def newGame(self):
         self.positionKI = []
@@ -44,18 +42,24 @@ class TicTacToe:
     def getStartKI(self):
         return []
 
+    def getBoard(self):
+        return self.board
+
 
     def nextTurn(self):
         return self.turn
 
     def makeMove(self, row, col):
-        if self.turn is True:
+
+        if self.turn:
             self.positionPlayer.append([row,col])
             self.turn = False
         else:
             self.positionKI.append([row,col])
             self.turn = True
+
         self.genBoard()
+
 
 
     def genBoard(self):
@@ -76,10 +80,17 @@ class TicTacToe:
         return 0
 
     def checkWin(self):
-        print(self.board)
-        if self.checkRowForWin() or self.checkColForWin(): return True
+        if self.checkRowForWin() or self.checkColForWin() or self.checkDiaForWin(): return True
         return False
         
+    def checkDiaForWin(self):
+        for row in range(len(self.board)):
+                for i in range(3):
+                    if self.board[row][i] != None:
+                        for j in range(4):
+                            if self.board[row][i] != self.board[row+j if row <= 2 else row-j][j+i]: break
+                            if j == 3: return True
+
     def checkRowForWin(self):
         for row in range(len(self.board)):
             for i in range(3):
@@ -103,6 +114,7 @@ class TicTacToe:
             if arr[x][0] == row and arr[x][1] == col:
                 return True
         return False
+
 
     
 
