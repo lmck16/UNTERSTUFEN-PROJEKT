@@ -8,6 +8,8 @@ class PageHandler(tk.Tk):
 
     user = "{USERNAME}"
 
+    runningGames = []
+
     def __init__(self):
         super().__init__()
         self.resizable(False,False)

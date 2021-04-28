@@ -21,6 +21,8 @@ class Layout(tk.Tk):
 
     n=6
 
+    end = False
+
     def __init__(self, spiel, ttt = False):
         super().__init__()
         self.spiel = spiel
@@ -61,8 +63,8 @@ class Layout(tk.Tk):
                 y1 = (5-row) * 90
                 x2 = x1 + 90
                 y2 = y1 + 90
-                self.board[row][col] = self.canvas.create_rectangle(x1, y1, x2, y2, fill=next(color), tags=f"tile{col+1}{row+1}")
-                self.canvas.tag_bind(f"tile{col+1}{row+1}","<Button-1>", lambda e, i=col+1, j=row+1: self.__keyDown(e,i,j))
+                self.board[row][col] = self.canvas.create_rectangle(x1, y1, x2, y2, fill=next(color), tags=f"tile{col}{row}")
+                self.canvas.tag_bind(f"tile{col}{row}","<Button-1>", lambda e, i=col, j=row: self.__keyDown(e,i,j))
 
     def highlightField(self, j, i, color = "#3bbbea"):
         self.canvas.itemconfig(self.board[j-1][i-1], fill=color)
@@ -87,6 +89,8 @@ class Layout(tk.Tk):
             for j in range(len(self.board)):
                 if self.board[i][j] is not None:
                     self.canvas.delete(self.board[i][j])
+        self.removeAllFigures()
+        self.spiel.newGame()
         self.drawboard()
     
     def resetBoard(self, noFigures = False):
@@ -119,7 +123,7 @@ class Layout(tk.Tk):
         self.initFigures(ki, user)
         
     def __drawFigures(self, i, j, color):
-        loc = self.canvas.coords(self.board[j-1][i-1])
+        loc = self.canvas.coords(self.board[j][i])
 
         newCoords = [
             loc[0]+20,
@@ -129,9 +133,9 @@ class Layout(tk.Tk):
         ]
 
         if color == self.colorKI: 
-            self.figures[j-1][i-1] = self.canvas.create_rectangle(newCoords,fill=color, tags=f"tile{i}{j}")
+            self.figures[j][i] = self.canvas.create_rectangle(newCoords,fill=color, tags=f"tile{i}{j}")
         else:
-            self.figures[j-1][i-1] = self.canvas.create_oval(newCoords,fill=color, tags=f"tile{i}{j}")
+            self.figures[j][i] = self.canvas.create_oval(newCoords,fill=color, tags=f"tile{i}{j}")
         
         self.canvas.tag_bind(f"tile{i}{j}","<Button-1>", lambda e, i=i, j=j, color=color: self.__figurePressed(e,i,j, color))
         
@@ -169,15 +173,22 @@ class Layout(tk.Tk):
                 self.lockedJ = j
 
     def __keyDown(self, event, i, j):
+
+        if self.end:
+            self.spiel.newGame()
+            self.end = False
+
         print ("PRESSED ({}/{})".format(j, i))
         
         #self.canvas.itemconfig(self.board[j-1][i-1], fill="#82827f")
         
         self.gameHandler(self.lockedJ, self.lockedI, j, i)
         self.resetBoard()
-        self.highlightField(j, i)
+        self.highlightField(j+1, i+1)
 
-        if self.spiel.checkWin(): self.showtime()
+        if self.spiel.checkWin(): 
+            self.showtime()
+            self.end = True
 
         self.locked = True
 
@@ -223,8 +234,8 @@ class Layout(tk.Tk):
         self.resetBoard(True)
         for i in range(self.n):
             for j in range(self.n):
-                if self.turn is True: self.highlightField(i, j, "#24fc03")
-                else: self.highlightField(i, j, "#ff0000")
+                if self.spiel.getTurn() is True: self.highlightField(i, j, self.colorKI)
+                else: self.highlightField(i, j, self.colorUser)
 
 
 

@@ -20,8 +20,17 @@ class TicTacToe:
         self.board = [[None for row in range(self.n)] for col in range(self.n)]
         #self.print_board()
 
+    def newGame(self):
+        self.positionKI = []
+        self.positionPlayer = []
+        self.board = [[None for row in range(self.n)] for col in range(self.n)]
+        self.turn = True
+
     def getDisplayname(self):
         return self.displayname
+
+    def getTurn(self):
+        return self.turn
 
     def getPositionKI(self):
         return self.positionKI
@@ -67,6 +76,7 @@ class TicTacToe:
         return 0
 
     def checkWin(self):
+        print(self.board)
         if self.checkRowForWin() or self.checkColForWin(): return True
         return False
         
@@ -88,13 +98,11 @@ class TicTacToe:
                         if j == 3: return True
         return False
     
-    
-    
-
     def __isInArray(self, arr, row, col):
         for x in range(len(arr)):
             if arr[x][0] == row and arr[x][1] == col:
                 return True
         return False
+
     
 
