@@ -8,6 +8,7 @@ class PawnChess:
     startPlayer = [[5,1], [5,2], [5,3], [5,4], [5,5]]
     length = 6
     current_player = "x"
+    board = []
 
     def getDisplayname(self):
         return self.displayname
@@ -33,5 +34,4 @@ class PawnChess:
                 if self.board[row][col] == 'x':
                     board.append([row, col])
         return board
-    
     
