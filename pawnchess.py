@@ -52,7 +52,7 @@ class PawnChess:
             self.current_player = 'o'
         else:
             self.current_player = 'x'
-            
+
     def get_movable_figures(self):
         possible_moves = self.get_all_possible_moves()
         movable_figures = [i[0] for i in possible_moves]
@@ -70,16 +70,7 @@ class PawnChess:
         print(possible_moves)
 
         self.makeMove(random.choice(possible_moves))
-
-    def get_movable_figures(self):
-        possible_moves = self.get_all_possible_moves()
-        movable_figures = [i[0] for i in possible_moves]
-        movable_figures_no_dupe = []
-        for i in movable_figures:
-            i = tuple(i)
-            movable_figures_no_dupe.append(i)
-        return list(dict.fromkeys(movable_figures_no_dupe))
-
+        
     def get_possible_moves_clicked(self, row, col):
         if self.current_player == "o":
             enemy_player = "x"
