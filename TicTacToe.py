@@ -4,15 +4,14 @@ class TicTacToe:
 
     n = 6
 
-    positionKI = []   
-    positionPlayer = []
-
     symbolKI = "O"
     symbolPlayer = "X"
 
-    turn = True # TRUE = PLAYER / FALSE = KI
-
     def __init__(self):
+        self.positionKI = []   
+        self.positionPlayer = []
+        self.turn = True # TRUE = PLAYER / FALSE = KI
+
         self.board = [[None for row in range(self.n)] for col in range(self.n)]
         self.genBoard()
 

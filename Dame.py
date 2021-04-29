@@ -3,16 +3,16 @@ import random
 
 
 class Dame:
-    # class-Variable für mögliche winning-condition
-    end_game = [False, '']
-
     displayname = "Dame"
-
-    startKI = [[0, 0], [1, 1], [0, 2], [1, 3], [0, 4], [1, 5]]
-    startPlayer = [[4, 0], [5, 1], [4, 2], [5, 3], [4, 4], [5, 5]]
 
     # Feld initialisieren, aktuellen Spieler auf 'x' setzen
     def __init__(self):
+        self.startKI = [[0, 0], [1, 1], [0, 2], [1, 3], [0, 4], [1, 5]]
+        self.startPlayer = [[4, 0], [5, 1], [4, 2], [5, 3], [4, 4], [5, 5]]
+
+        # class-Variable für mögliche winning-condition
+        self.end_game = [False, '']
+
         self.board = [['o', ' ', 'o', ' ', 'o', ' '],
                       [' ', 'o', ' ', 'o', ' ', 'o'],
                       [' ', ' ', ' ', ' ', ' ', ' '],

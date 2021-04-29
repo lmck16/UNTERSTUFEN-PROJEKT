@@ -1,36 +1,36 @@
-# TODO MELDUNG BEI SIEG
-# TODO RESET NACH SPIELENDE
-
 import tkinter as tk
-from time import sleep
 from ki import KI
 from tkinter import messagebox
 
 class Layout(tk.Tk):
-    colours = ["#fefefe", "#7f7f7f"]
 
-    locked = False
-
-    locationKI = []
-    locationUser = []
-    colorKI = "#ffff00"
-    colorUser = "#ff0000"
-
-    lockedI = 0
-    lockedJ = 0
-
+    n=6
     winsKI = 0
     winsPlayer = 0
 
-    turn = True # TRUE = USER / FALSE = KI
-
-    n=6
-
-    end = False
-
-    def __init__(self, spiel, ttt = False):
+    def __init__(self, spiel, user, ttt = False):
         super().__init__()
+
+        self.colours = ["#fefefe", "#7f7f7f"]
+
+        self.locked = False
+
+        self.locationKI = []
+        self.locationUser = []
+        self.colorKI = "#ffff00"
+        self.colorUser = "#ff0000"
+
+        self.lockedI = 0
+        self.lockedJ = 0
+
+        self.turn = True # TRUE = USER / FALSE = KI
+
+        self.end = False
+
+
         self.spiel = spiel
+
+        self.user = user
 
         self.ttt = ttt
 
@@ -58,7 +58,7 @@ class Layout(tk.Tk):
 
 
     def setScoreToDisplay(self, ki, user):
-        self.title("{} - PUNKTE KI ({}) || PUNKTE USER ({})".format(self.spiel.getDisplayname(), ki, user))
+        self.title("{} - PUNKTE KI ({}) || PUNKTE {} ({})".format(self.spiel.getDisplayname(), ki, self.user.getUsername(), user))
 
     def drawboard(self):
         from itertools import cycle
