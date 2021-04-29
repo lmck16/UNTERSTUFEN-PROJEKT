@@ -35,13 +35,13 @@ class Database():
         self.connection.commit()
         self.connection.close()
     
-    def insertGameSession(self, winner, board, id):
+    def insertGameSession(self, winner, board, usrId):
         session = uuid4()   
 
         self.connection = sqlite3.connect(self.databaseFile)
         self.cursor = self.connection.cursor()
 
-        sql = "INSERT INTO gameSession VALUES('{}', '{}', '{}')".format(session, winner, board)
+        sql = "INSERT INTO gameSession VALUES('{}', '{}', '{}', '{}')".format(session, winner, board, usrId)
 
         self.cursor.execute(sql)
         self.connection.commit()

@@ -16,6 +16,10 @@ class PageHandler(tk.Tk):
 
     def __init__(self):
         super().__init__()
+
+        self.db = Database()
+
+
         self.resizable(False,False)
         self.geometry("{}x{}".format(330,200))
         self.title("UNTERSTUFEN PROJEKT")
@@ -40,8 +44,7 @@ class PageHandler(tk.Tk):
         pw = self.passwortEntry.get()
         username = self.usernameEntry.get()
 
-        db = Database()
-        if db.login(username, pw) is not None: self.user = db.login(username, pw)
+        if self.db.login(username, pw) is not None: self.user = self.db.login(username, pw)
         else: return
 
         self.gamemodePage()
@@ -50,8 +53,7 @@ class PageHandler(tk.Tk):
         pw = self.passwortEntry.get()
         username = self.usernameEntry.get()
 
-        db = Database()
-        db.insertNewUser(username, pw)
+        self.db.insertNewUser(username, pw)
 
         self.loginPage()
 
@@ -116,7 +118,7 @@ class PageHandler(tk.Tk):
         self.mainText = tk.Label(self, text="SPIELMODUS")
         self.mainText.grid(row=0, column=2)
 
-        self.bauernschachButton = tk.Button(self, text="BAUERNSCHACH", command= lambda: self.startLayout("dame"), width = 15)
+        self.bauernschachButton = tk.Button(self, text="BAUERNSCHACH", command= lambda: self.startLayout("baurenschach"), width = 15)
         self.bauernschachButton.grid(row=1, column=2)
 
         self.dameButton = tk.Button(self, text="DAME", command= lambda: self.startLayout("dame"), width = 15)
@@ -152,11 +154,15 @@ class PageHandler(tk.Tk):
         if game == "dame":
             from Dame import Dame
             game = Dame()
-            layout = Layout(game, self.user)
+            layout = Layout(game, self.user, self.db)
         elif game == "ttt":
             from TicTacToe import TicTacToe
             game = TicTacToe()
-            layout = Layout(game, self.user, True)
+            layout = Layout(game, self.user, self.db, True)
+        elif game == "baurenschach":
+            from pawnchess import PawnChess
+            game = PawnChess()
+            layout = Layout(game, self.user)
 
         print(layout)
         print(game)
