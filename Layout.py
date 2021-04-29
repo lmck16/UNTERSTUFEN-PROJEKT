@@ -199,7 +199,6 @@ class Layout(tk.Tk):
         if self.ttt:
             self.gameHandler(self.lockedJ, self.lockedI, j, i)
             self.resetBoard()
-            
 
             self.__checkWin()
 
