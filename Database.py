@@ -35,20 +35,33 @@ class Database():
         self.connection.commit()
         self.connection.close()
     
-    def insertGameSession(self, winner, board, usrId):
+    def getGameSession(self, usrId, dpName):
+        self.connection = sqlite3.connect(self.databaseFile)
+        self.cursor = self.connection.cursor()
+
+        sql = "SELECT * FROM gameSession WHERE user_id = '{}' AND game = '{}'".format(usrId, dpName)
+
+        self.cursor.execute(sql)
+
+        records = self.cursor.fetchall()
+        #for row in records:
+        #    print(row[0])
+        #    print("----------------")
+
+        self.cursor.close()
+        self.connection.commit()
+        self.connection.close()
+
+        return records
+
+    def insertGameSession(self, winner, board, usrId, dpName):
         session = uuid4()   
 
         self.connection = sqlite3.connect(self.databaseFile)
         self.cursor = self.connection.cursor()
 
-        sql = "INSERT INTO gameSession VALUES('{}', '{}', '{}', '{}')".format(session, winner, board, usrId)
+        sql = "INSERT INTO gameSession VALUES('{}', '{}', '{}', '{}', '{}')".format(session, winner, board, usrId, dpName)
 
         self.cursor.execute(sql)
         self.connection.commit()
         self.connection.close() 
-
-
-
-x = Database()
-x.insertNewUser("tets", "435345")
-print(x.login("tets", "435345"))

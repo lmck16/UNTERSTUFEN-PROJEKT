@@ -7,11 +7,14 @@ class HistoryBoard():
 
     def setLocation(self, ki, user):
         self.locationKI.append(ki)
+        print(self.locationKI)
         self.locationUser.append(user)
 
     def mergeArrays(self):
         self.fullArr[0] = self.locationKI
         self.fullArr[1] = self.locationUser
+
+        #print(self.locationKI)
         
     def getAllRounds(self):
         self.mergeArrays()

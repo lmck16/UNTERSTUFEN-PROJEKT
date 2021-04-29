@@ -127,6 +127,10 @@ class PageHandler(tk.Tk):
         self.tictactoeButton = tk.Button(self, text="TIC-TAC-TOE", command= lambda: self.startLayout("ttt"), width = 15)
         self.tictactoeButton.grid(row=3, column=2)
 
+        if self.user.getId() > 0:
+            self.historyButton = tk.Button(self, text="HISTORY", command= lambda: self.startLayout("history"), width = 15)
+            self.historyButton.grid(row=4, column=2)
+
         self.backButton = tk.Button(self, text="<---", command=self.loginPage)
         self.backButton.grid(row=4, column=1)
 
@@ -145,41 +149,30 @@ class PageHandler(tk.Tk):
     def noLogin(self, game):
         self.gamemodePage()
 
-    def startLayout(self, game):
+    def startLayout(self, lay):
         #self.backButton.config(state="disabled")
         #self.tictactoeButton.config(state="disabled")
         #self.dameButton.config(state="disabled")
         #self.bauernschachButton.config(state="disabled")
         from Layout import Layout
-        if game == "dame":
+        if lay == "dame":
             from Dame import Dame
             game = Dame()
             layout = Layout(game, self.user, self.db)
-        elif game == "ttt":
+        elif lay == "ttt":
             from TicTacToe import TicTacToe
             game = TicTacToe()
             layout = Layout(game, self.user, self.db, True)
-        elif game == "baurenschach":
+        elif lay == "baurenschach":
             from pawnchess import PawnChess
             game = PawnChess()
             layout = Layout(game, self.user)
+        elif lay == "history":
+            from HistoryLayout import HistoryLayout
+            layout = HistoryLayout(self.user)
 
-        print(layout)
-        print(game)
-        #self.runningLayouts[-1].protocol("WM_DELETE_WINDOW", lambda arg=self.runningLayouts[-1]: self.__on_closingg(arg))
         layout.mainloop()
 
-        
-
-    def __on_closing(self, win):
-        self.backButton.config(state="active")
-        self.tictactoeButton.config(state="active")
-        self.dameButton.config(state="active")
-        self.bauernschachButton.config(state="active")
-        self.einstellungenButton.config(state="active")
-
-        self.win.destroy()
-        self.win = None
 
 def main():
     gui = PageHandler()

@@ -98,8 +98,10 @@ class Layout(tk.Tk):
         self.locationUser = locationUser
 
 
-        self.hrBoard.setLocation(self.locationKI, self.locationUser)
-        self.hrBoard.getAllRounds()
+        self.hrBoard.setLocation(locationKI, locationUser)
+        #print("--------------")
+        #print(self.locationKI)
+        #print("--------------")
         self.__setFigures(self.locationKI, self.colorKI)
         self.__setFigures(self.locationUser, self.colorUser)
 
@@ -230,19 +232,16 @@ class Layout(tk.Tk):
                     self.KI.move_computer_random()
                     self.resetBoard()
 
-
-
-
     def __checkWin(self):
         if self.spiel.checkWin():
             if self.spiel.getTurn() is False:
                 self.winsPlayer = self.winsPlayer + 1
                 messagebox.showinfo("GEWONNEN", "SIE HABEN GEWONNEN")
-                if self.user.getId() > 0: self.db.insertGameSession("user", self.hrBoard.getAllRounds(), self.user.getId())
+                if self.user.getId() > 0: self.db.insertGameSession("user", self.hrBoard.getAllRounds(), self.user.getId(), self.spiel.getDisplayname())
             else:
                 self.winsKI = self.winsKI + 1
                 messagebox.showinfo("VERLOREN", "SIE HABEN VERLOREN")
-                if self.user.getId() > 0: self.db.insertGameSession("ki", self.hrBoard.getAllRounds(), self.user.getId())
+                if self.user.getId() > 0: self.db.insertGameSession("ki", self.hrBoard.getAllRounds(), self.user.getId(), self.spiel.getDisplayname())
             self.hrBoard.reset()
             self.setScoreToDisplay(self.winsKI,self.winsPlayer)
             self.resetBoard(True)
