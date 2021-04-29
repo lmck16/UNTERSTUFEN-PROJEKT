@@ -2,14 +2,35 @@ import sys
 import random
 
 class PawnChess:
-    end_game = [False, ""]
-    displayname = "PawnChess"
-    startKI = [[0,1], [0,2], [0,3], [0,4], [0,5]]
-    startPlayer = [[5,1], [5,2], [5,3], [5,4], [5,5]]
-    length = 6
-    current_player = "x"
-    board = []
-    
+    displayname = "Bauernschach"
+
+    def __init__(self):
+        self.startKI = [[0, 0], [1, 1], [0, 2], [1, 3], [0, 4], [1, 5]]
+        self.startPlayer = [[4, 0], [5, 1], [4, 2], [5, 3], [4, 4], [5, 5]]
+        # class-Variable für mögliche winning-condition
+        self.end_game = [False, '']
+        self.board = [['o', 'o', 'o', 'o', 'o', 'o'],
+                      [' ', ' ', ' ', ' ', ' ', ' '],
+                      [' ', ' ', ' ', ' ', ' ', ' '],
+                      [' ', ' ', ' ', ' ', ' ', ' '],
+                      [' ', ' ', ' ', ' ', ' ', ' '],
+                      ['x', 'x', 'x', 'x', 'x', 'x']]
+        self.length = 6
+        self.current_player = "x"
+
+    def print_board(self):
+        print()
+        print("       0     1     2     3     4     5  ")
+        print()
+        print("------------------------------------------")
+        for row in range(self.length):
+            sys.stdout.write("{}   |".format(row))
+            for col in range(self.length):
+                sys.stdout.write("  {}  |".format(self.board[row][col]))
+            print()
+            print("------------------------------------------")
+        print()
+
     def move_player(self):
         print('Spieler ' + self.current_player + ' am Zug')
         # alle möglichen Züge ziehen
@@ -42,16 +63,21 @@ class PawnChess:
             self.end_game = [True, self.current_player]
         self.board[start[0]][start[1]] = ' '
 
-        # wenn Differenz gleich 2, dann wurde eine Figur übersprungen, d.h. eine gegnerische Spielfigur muss entfernt
-        # werden
-        if abs(end[0] - start[0]) == 2:
-            self.board[(end[0] + start[0]) // 2][(end[1] + start[1]) // 2] = ' '
-
         # Nach jedem Zug den aktuellen Spieler wechseln
         if self.current_player == 'x':
             self.current_player = 'o'
         else:
             self.current_player = 'x'
+
+    def check_winning_conditions(self):
+        if len(self.get_all_possible_moves()) == 0:
+            if self.current_player == 'x':
+                return 'o'
+            else:
+                return 'x'
+        if self.end_game[0]:
+            return self.end_game[1]
+        return None
 
     def get_movable_figures(self):
         possible_moves = self.get_all_possible_moves()
@@ -70,7 +96,7 @@ class PawnChess:
         print(possible_moves)
 
         self.makeMove(random.choice(possible_moves))
-        
+
     def get_possible_moves_clicked(self, row, col):
         if self.current_player == "o":
             enemy_player = "x"
