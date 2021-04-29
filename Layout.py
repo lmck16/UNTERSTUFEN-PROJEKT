@@ -77,7 +77,14 @@ class Layout(tk.Tk):
         
     def highlightMultipleFields(self, coords, color = "#3bbbea"):
         for i in range(len(coords)):
-            self.highlightField(coords[i][1], coords[i][0], color)
+            self.highlightField(coords[i][0]+1, coords[i][1]+1, color)
+
+    def highlightFigure(self, j, i, color = "#3bbbea"):
+        self.canvas.itemconfig(self.figures[j][i], fill=color)
+
+    def highlightMultipleFigures(self, coords, color = "#800000"):
+        for i in range(len(coords)):
+            self.highlightFigure(coords[i][0], coords[i][1], color)
 
     def initFigures(self, locationKI, locationUser, colorKI = "#ffff00", colorUser = "#ff0000"):
         self.colorUser = colorUser
@@ -148,6 +155,8 @@ class Layout(tk.Tk):
             self.figures[j][i] = self.canvas.create_oval(newCoords,fill=color, tags=f"tile{i}{j}")
         
         self.canvas.tag_bind(f"tile{i}{j}","<Button-1>", lambda e, i=i, j=j, color=color: self.__figurePressed(e,i,j, color))
+        if self.ttt is False:
+            self.highlightMultipleFigures(self.spiel.get_movable_figures(), "#800000")
         
     def moveFigure(self, oldI, oldJ, newI, newJ):
         self.__genCurrentField()
@@ -162,7 +171,7 @@ class Layout(tk.Tk):
 
     def __isInArray(self, arr, i, j):
         for x in range(len(arr)):
-            if arr[x][0] == j and arr[x][1] == i:
+            if arr[x][0] == i and arr[x][1] == j:
                 return True
         return False
 
@@ -171,10 +180,10 @@ class Layout(tk.Tk):
         self.resetBoard()
         if self.ttt is False:
             if self.turn is True:
-                if self.__isInArray(self.spiel.getPositionPlayer(), i, j):
+                if self.__isInArray(self.spiel.getPositionPlayer(), j, i) and self.__isInArray(self.spiel.get_movable_figures(), j, i):
                     print("PLAYER : {}".format(self.spiel.getPositionPlayer()))
-                    self.highlightMultipleFields(self.spiel.get_possible_moves_clicked(i, j))
-                    print(self.spiel.get_possible_moves_clicked(i, j))
+                    self.highlightMultipleFields(self.spiel.get_possible_moves_clicked(j, i))
+
                     #return
 
                     self.canvas.itemconfig(self.figures[j][i], fill="#40ff00")
@@ -203,12 +212,17 @@ class Layout(tk.Tk):
 
             self.highlightField(j+1, i+1)
         elif self.locked:
+            if self.__isInArray(self.spiel.get_possible_moves_clicked(self.lockedJ, self.lockedI), j, i):
+                self.locked = False
 
-            self.locked = False
+                self.gameHandler(self.lockedJ, self.lockedI, j, i)
+                self.resetBoard()
 
-            self.gameHandler(self.lockedJ, self.lockedI, j, i)
+                self.highlightField(j + 1, i + 1)
+                if self.spiel.getTurn() is False:
+                    self.KI.move_computer_random()
+                    self.resetBoard()
 
-            self.highlightField(j+1, i+1)
 
 
 

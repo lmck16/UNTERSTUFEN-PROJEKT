@@ -13,12 +13,12 @@ class Dame:
 
     # Feld initialisieren, aktuellen Spieler auf 'x' setzen
     def __init__(self):
-        self.board = [[' ', 'o', ' ', 'o', ' ', 'o'],
-                      ['o', ' ', 'o', ' ', 'o', ' '],
+        self.board = [['o', ' ', 'o', ' ', 'o', ' '],
+                      [' ', 'o', ' ', 'o', ' ', 'o'],
                       [' ', ' ', ' ', ' ', ' ', ' '],
                       [' ', ' ', ' ', ' ', ' ', ' '],
-                      [' ', 'x', ' ', 'x', ' ', 'x'],
-                      ['x', ' ', 'x', ' ', 'x', ' ']]
+                      ['x', ' ', 'x', ' ', 'x', ' '],
+                      [' ', 'x', ' ', 'x', ' ', 'x']]
         self.length = 6
         self.current_player = "x"
 
@@ -32,10 +32,20 @@ class Dame:
         return self.startPlayer
 
     def getPositionKI(self):
-        return [[0, 0], [1, 1], [0, 2], [1, 3], [0, 4], [1, 5]]
+        board = []
+        for row in range(self.length):
+            for col in range(self.length):
+                if self.board[row][col] == 'o':
+                    board.append([row, col])
+        return board
 
     def getPositionPlayer(self):
-        return [[4, 0], [5, 1], [4, 2], [5, 3], [4, 4], [5, 5]]
+        board = []
+        for row in range(self.length):
+            for col in range(self.length):
+                if self.board[row][col] == 'x':
+                    board.append([row, col])
+        return board
 
     # Konsolen-Ausgabe des Feldes
     def print_board(self):
@@ -217,3 +227,9 @@ class Dame:
             return possible_moves_with_enemy
         else:
             return possible_moves
+
+    def getTurn(self):
+        if self.current_player == 'x':
+            return True
+        else:
+            return False

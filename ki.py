@@ -1,3 +1,4 @@
+import random
 from random import randrange
 
 class KI:
@@ -27,3 +28,10 @@ class KI:
             if arr[i][0] == col and arr[i][1] == row:
                 return True
         return False
+
+    def move_computer_random(self):
+        possible_moves = self.spiel.get_all_possible_moves()
+        print("Liste möglicher Züge: ")
+        print(possible_moves)
+
+        self.spiel.makeMove(random.choice(possible_moves))
