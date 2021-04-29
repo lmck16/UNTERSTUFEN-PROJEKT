@@ -43,7 +43,6 @@ class TicTacToe:
     def getBoard(self):
         return self.board
 
-
     def nextTurn(self):
         return self.turn
 
@@ -57,8 +56,6 @@ class TicTacToe:
             self.turn = True
 
         self.genBoard()
-
-
 
     def genBoard(self):
         for row in range(self.n):
@@ -80,7 +77,7 @@ class TicTacToe:
     def checkWin(self):
         if self.checkRowForWin() or self.checkColForWin() or self.checkDiaForWin(): return True
         return False
-        
+
     def checkDiaForWin(self):
         for row in range(len(self.board)):
                 for i in range(3):
@@ -106,7 +103,7 @@ class TicTacToe:
                         if self.board[i][col] != self.board[j+i][col]: break
                         if j == 3: return True
         return False
-    
+
     def __isInArray(self, arr, row, col):
         for x in range(len(arr)):
             if arr[x][0] == row and arr[x][1] == col:
