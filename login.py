@@ -1,7 +1,8 @@
 import tkinter as tk
 from tkinter import *
 from tkinter import messagebox
-
+from User import User
+from Database import Database
 
 
 class PageHandler(tk.Tk):
@@ -20,6 +21,8 @@ class PageHandler(tk.Tk):
         self.title("UNTERSTUFEN PROJEKT")
         self.protocol("WM_DELETE_WINDOW", self.__killAll)
 
+        self.user = User()
+
         self.grid_columnconfigure(1, minsize=100)
         self.grid_columnconfigure(2, minsize=100)
         self.grid_columnconfigure(3, minsize=100)
@@ -32,6 +35,25 @@ class PageHandler(tk.Tk):
 
     def __killAll(self):
         exit()
+
+    def login(self):
+        pw = self.passwortEntry.get()
+        username = self.usernameEntry.get()
+
+        db = Database()
+        if db.login(username, pw) is not None: self.user = db.login(username, pw)
+        else: return
+
+        self.gamemodePage()
+
+    def reg(self):
+        pw = self.passwortEntry.get()
+        username = self.usernameEntry.get()
+
+        db = Database()
+        db.insertNewUser(username, pw)
+
+        self.loginPage()
 
     def registerPage(self):
         self.resetWindow()
@@ -48,13 +70,13 @@ class PageHandler(tk.Tk):
 
         self.passwortText = tk.Label(self, text="PASSWORT : ")
         self.passwortText.grid(row=3, column=1)
-        self.passwortEntry = tk.Entry(self)
+        self.passwortEntry = tk.Entry(self, show="*")
         self.passwortEntry.grid(row=3, column=2)
 
         self.backButton = tk.Button(self, text="<---", command=self.loginPage)
         self.backButton.grid(row=4, column=1)
 
-        self.registerButton = tk.Button(self, text="REGISTRIEREN", command=self.void)
+        self.registerButton = tk.Button(self, text="REGISTRIEREN", command=self.reg)
         self.registerButton.grid(row=4, column=2)
 
     def loginPage(self):
@@ -74,45 +96,22 @@ class PageHandler(tk.Tk):
         self.passwortText = tk.Label(self, text="PASSWORT : ")
         self.passwortText.grid(row=3, column=1)
 
-        self.passwortEntry = tk.Entry(self)
+        self.passwortEntry = tk.Entry(self, show="*")
         self.passwortEntry.grid(row=3, column=2)
 
         self.loginButton = tk.Button(self, text="LOGIN", command=self.login)
         self.loginButton.grid(row=4, column=2)
 
-        self.noLoginButton = tk.Button(self, text="OHNE LOGIN", command=self.void)
+        self.noLoginButton = tk.Button(self, text="OHNE LOGIN", command=self.gamemodePage)
         self.noLoginButton.grid(row=4, column=1)
 
         self.registerButton = tk.Button(self, text="REGISTRIEREN", command=self.registerPage)
         self.registerButton.grid(row=4, column=3)
 
-    def settingsPage(self):
-        self.resetWindow()
-
-        self.title("EINSTELLUNGEN")
-
-        self.mainText = tk.Label(self, text="EINSTELLUNGEN")
-        self.mainText.grid(row=0, column=2)
-
-        self.bauernschachButton = tk.Button(self, text="BAUERNSCHACH", command=self.void, width = 15)
-        self.bauernschachButton.grid(row=1, column=2)
-
-        self.dameButton = tk.Button(self, text="DAME", command=self.void, width = 15)
-        self.dameButton.grid(row=2, column=2)
-
-        self.tictactoeButton = tk.Button(self, text="TIC-TAC-TOE", command=self.void, width = 15)
-        self.tictactoeButton.grid(row=3, column=2)
-
-        self.backButton = tk.Button(self, text="<---", command=self.loginPage)
-        self.backButton.grid(row=4, column=1)
-
-        self.einstellungenButton = tk.Button(self, text="Einstellungen", command=self.void)
-        self.einstellungenButton.grid(row=4, column=3)
-
     def gamemodePage(self):
         self.resetWindow()
 
-        self.title("GAMEMODE")
+        self.title("Angemeldet als {}".format(self.user.getUsername()))
 
         self.mainText = tk.Label(self, text="SPIELMODUS")
         self.mainText.grid(row=0, column=2)
@@ -132,26 +131,14 @@ class PageHandler(tk.Tk):
         self.einstellungenButton = tk.Button(self, text="Einstellungen", command=self.void)
         self.einstellungenButton.grid(row=4, column=3)
 
-
-    def all_children (self):
-        _list = self.winfo_children()
-
-        for item in _list :
-            if item.winfo_children() :
-                _list.extend(item.winfo_children())
-
-        return _list
+        self.einstellungenButton.config(state="disabled")
 
     def resetWindow(self):
         for child in self.winfo_children():
             child.destroy()
 
-
     def void(self):
-        print("")
-
-    def login(self):
-        self.gamemodePage()
+        print("VOID")
 
     def noLogin(self, game):
         self.gamemodePage()
@@ -161,21 +148,20 @@ class PageHandler(tk.Tk):
         #self.tictactoeButton.config(state="disabled")
         #self.dameButton.config(state="disabled")
         #self.bauernschachButton.config(state="disabled")
-        #self.einstellungenButton.config(state="disabled")
         from Layout import Layout
         if game == "dame":
             from Dame import Dame
-            self.runningGames.append(Dame())
-            self.runningLayouts.append(Layout(self.runningGames[-1]))
+            game = Dame()
+            layout = Layout(game, self.user)
         elif game == "ttt":
             from TicTacToe import TicTacToe
-            self.runningGames.append(TicTacToe())
-            self.runningLayouts.append(Layout(self.runningGames[-1], True))
+            game = TicTacToe()
+            layout = Layout(game, self.user, True)
 
-        print(self.runningLayouts[-1])
-        print(self.runningGames[-1])
+        print(layout)
+        print(game)
         #self.runningLayouts[-1].protocol("WM_DELETE_WINDOW", lambda arg=self.runningLayouts[-1]: self.__on_closingg(arg))
-        self.runningLayouts[-2].mainloop()
+        layout.mainloop()
 
         
 
