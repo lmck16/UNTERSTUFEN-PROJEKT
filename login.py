@@ -9,6 +9,7 @@ class PageHandler(tk.Tk):
     user = "{USERNAME}"
 
     runningGames = []
+    runningLayouts = []
 
     board = None
 
@@ -30,9 +31,7 @@ class PageHandler(tk.Tk):
 
 
     def __killAll(self):
-        if self.board is not None:
-            self.board.destroy()
-        self.destroy()
+        exit()
 
     def registerPage(self):
         self.resetWindow()
@@ -158,34 +157,37 @@ class PageHandler(tk.Tk):
         self.gamemodePage()
 
     def startLayout(self, game):
-        self.backButton.config(state="disabled")
-        self.tictactoeButton.config(state="disabled")
-        self.dameButton.config(state="disabled")
-        self.bauernschachButton.config(state="disabled")
-        self.einstellungenButton.config(state="disabled")
-
+        #self.backButton.config(state="disabled")
+        #self.tictactoeButton.config(state="disabled")
+        #self.dameButton.config(state="disabled")
+        #self.bauernschachButton.config(state="disabled")
+        #self.einstellungenButton.config(state="disabled")
         from Layout import Layout
         if game == "dame":
             from Dame import Dame
-            new_game = Dame()
-            self.board = Layout(new_game)
+            self.runningGames.append(Dame())
+            self.runningLayouts.append(Layout(self.runningGames[-1]))
         elif game == "ttt":
             from TicTacToe import TicTacToe
-            new_game = TicTacToe()
-            self.board = Layout(new_game, True)
+            self.runningGames.append(TicTacToe())
+            self.runningLayouts.append(Layout(self.runningGames[-1], True))
 
-        self.board.protocol("WM_DELETE_WINDOW", self.__on_closing)
-        self.board.mainloop()
+        print(self.runningLayouts[-1])
+        print(self.runningGames[-1])
+        #self.runningLayouts[-1].protocol("WM_DELETE_WINDOW", lambda arg=self.runningLayouts[-1]: self.__on_closingg(arg))
+        self.runningLayouts[-2].mainloop()
 
-    def __on_closing(self):
+        
+
+    def __on_closing(self, win):
         self.backButton.config(state="active")
         self.tictactoeButton.config(state="active")
         self.dameButton.config(state="active")
         self.bauernschachButton.config(state="active")
         self.einstellungenButton.config(state="active")
 
-        self.board.destroy()
-        self.board = None
+        self.win.destroy()
+        self.win = None
 
 def main():
     gui = PageHandler()
