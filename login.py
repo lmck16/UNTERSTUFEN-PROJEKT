@@ -157,6 +157,10 @@ class PageHandler(tk.Tk):
             from TicTacToe import TicTacToe
             game = TicTacToe()
             layout = Layout(game, self.user, True)
+        elif game == "baurenschach":
+            from pawnchess import PawnChess
+            game = PawnChess()
+            layout = Layout(game, self.user)
 
         print(layout)
         print(game)
