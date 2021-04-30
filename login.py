@@ -18,7 +18,6 @@ class PageHandler(tk.Tk):
         super().__init__()
 
         self.db = Database()
-        self.db.start()
 
 
         self.resizable(False,False)
@@ -188,11 +187,3 @@ class PageHandler(tk.Tk):
             layout = HistoryLayout(self.user)
 
         layout.mainloop()
-
-
-def main():
-    gui = PageHandler()
-
-    gui.mainloop()
-
-main()
