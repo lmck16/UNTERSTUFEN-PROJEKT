@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import *
 from Database import Database
 from ast import literal_eval
+from functools import partial
 
 class HistoryLayout(tk.Tk):
 
@@ -30,16 +31,19 @@ class HistoryLayout(tk.Tk):
         self.grid_columnconfigure(4, minsize=100)
         #self.grid_columnconfigure(5, minsize=100)
 
-        self.btn = []
+        self.btnT = []
+        self.btnD = []
+        self.btnB = []
 
-        self.ttt = self.db.getGameSession(self.user.getId(), "Dame")
-
-
+        self.ttt = self.db.getGameSession(self.user.getId(), "Tic Tac Toe")
+        self.dame = self.db.getGameSession(self.user.getId(), "Dame")
+        self.bauernschach = self.db.getGameSession(self.user.getId(), "Bauernschach")
 
         self.title("Spielverläufe")
         self.printButtons()
         self.board = [[None for row in range(self.n)] for col in range(self.n)]
         self.figures = [[None for row in range(self.n)] for col in range(self.n)]
+        
         self.drawboard()
 
     def drawboard(self):
@@ -58,35 +62,43 @@ class HistoryLayout(tk.Tk):
         print("{} //// {}".format(self.currArr[0][int(val)], self.currArr[1][int(val)]))
         self.initFigures(self.currArr[0][int(val)], self.currArr[1][int(val)])
 
-    def setSessionID(self, id):
+    def setSessionID(self, id, mode):
         self.resetBoard()
-        self.currArr = literal_eval(self.ttt[id][2])
+        self.currArr = literal_eval(mode[id][2])
         print(len(self.currArr[0]))
         print(self.currArr[0][4])
         self.mainSlider = Scale(self, from_=0, to=len(self.currArr[0])-1, orient=HORIZONTAL, command=self.updateField)
         self.mainSlider.grid(row=self.startRow, column=4)
 
     def printButtons(self):
-        self.mainText = tk.Label(self, text="BAUERNSCHACH")
-        self.mainText.grid(row=self.startRow, column=1)
+        self.drawBauernschachButtons()
+        self.drawTttButtons()
+        self.drawDameButtons()
+
+    def drawBauernschachButtons(self):
+        self.mainTextB = tk.Label(self, text="BAUERNSCHACH")
+        self.mainTextB.grid(row=self.startRow, column=1)
+
+        for i in range(len(self.bauernschach)):
+            self.btnB.append(tk.Button(self, text="SPIEL {}".format(i+1), command=partial(self.setSessionID, i, self.bauernschach), width = 15))
+            self.btnB[i].grid(row=self.startRow + i+2, column=1)
+
+    def drawTttButtons(self):
+        self.mainTextT = tk.Label(self, text="TIC TAC TOE")
+        self.mainTextT.grid(row=self.startRow, column=2)
 
         for i in range(len(self.ttt)):
-            self.btn.append(tk.Button(self, text="BAUERNSCHACH {}".format(i+1), command= lambda: self.setSessionID(i), width = 15))
-            self.btn[i].grid(row=self.startRow + i+2, column=1)
+            self.btnT.append(tk.Button(self, text="SPIEL {}".format(i+1), command=partial(self.setSessionID, i, self.ttt), width = 15))
+            self.btnT[i].grid(row=self.startRow + i+2, column=2)
 
-        #self.mainText = tk.Label(self, text="DAME")
-        #self.mainText.grid(row=self.startRow, column=2)
+    def drawDameButtons(self):
+        self.mainTextD = tk.Label(self, text="DAME")
+        self.mainTextD.grid(row=self.startRow, column=3)
+        temp = self.dame
 
-        #for i in range(2, 10):
-       #    self.btn = tk.Button(self, text="DAME {}".format(i), command= lambda: self.setSessionID("baurenschach"), width = 15)
-       #     self.btn.grid(row=self.startRow + i, column=2)
-
-        #self.mainText = tk.Label(self, text="TICTACTOE")
-        #self.mainText.grid(row=self.startRow, column=3)
-
-       # for i in range(2, 10):
-       #     self.btn = tk.Button(self, text="TTT {}".format(i), command= lambda: self.setSessionID("baurenschach"), width = 15)
-       #     self.btn.grid(row=self.startRow+i, column=3)
+        for i in range(len(self.dame)):
+            self.btnD.append(tk.Button(self, text="SPIEL {}".format(i+1), command=partial(self.setSessionID, i, self.dame), width = 15))
+            self.btnD[i].grid(row=self.startRow + i+2, column=3)
 
     def resetWindow(self):
         for child in self.winfo_children():

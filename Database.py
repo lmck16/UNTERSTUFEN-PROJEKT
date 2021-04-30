@@ -10,7 +10,7 @@ class Database():
         self.connection = sqlite3.connect(self.databaseFile)
         self.cursor = self.connection.cursor()
 
-        sql = 'CREATE TABLE "gameSession" ("gameSession_id"	TEXT NOT NULL UNIQUE,"winner"	INTEGER NOT NULL,"board"	INTEGER NOT NULL,"user_id"	INTEGER NOT NULL,"game"	INTEGER NOT NULL,PRIMARY KEY("gameSession_id"));'
+        sql = 'CREATE TABLE IF NOT EXISTS "gameSession"  ("gameSession_id"	TEXT NOT NULL UNIQUE,"winner"	INTEGER NOT NULL,"board"	INTEGER NOT NULL,"user_id"	INTEGER NOT NULL,"game"	INTEGER NOT NULL,PRIMARY KEY("gameSession_id"));'
 
         self.cursor.execute(sql)
         self.connection.commit()
@@ -19,7 +19,7 @@ class Database():
         self.connection = sqlite3.connect(self.databaseFile)
         self.cursor = self.connection.cursor()
 
-        sql = 'CREATE TABLE "user" ( "user_id"	INTEGER NOT NULL UNIQUE, "username"	TEXT NOT NULL, "password"	TEXT NOT NULL,PRIMARY KEY("user_id" AUTOINCREMENT));'
+        sql = 'CREATE TABLE IF NOT EXISTS "user" ( "user_id"	INTEGER NOT NULL UNIQUE, "username"	TEXT NOT NULL, "password"	TEXT NOT NULL,PRIMARY KEY("user_id" AUTOINCREMENT));'
 
         self.cursor.execute(sql)
         self.connection.commit()
@@ -55,15 +55,12 @@ class Database():
         self.connection = sqlite3.connect(self.databaseFile)
         self.cursor = self.connection.cursor()
 
-        sql = "SELECT * FROM gameSession WHERE user_id = '{}' AND game = '{}'".format(usrId, dpName)
+        sql = "SELECT * FROM gameSession WHERE user_id = '{}' AND game = '{}' LIMIT 10".format(usrId, dpName)
 
         self.cursor.execute(sql)
 
         records = self.cursor.fetchall()
-        #for row in records:
-        #    print(row[0])
-        #    print("----------------")
-
+        
         self.cursor.close()
         self.connection.commit()
         self.connection.close()

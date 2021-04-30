@@ -18,6 +18,7 @@ class PageHandler(tk.Tk):
         super().__init__()
 
         self.db = Database()
+        self.db.start()
 
 
         self.resizable(False,False)
