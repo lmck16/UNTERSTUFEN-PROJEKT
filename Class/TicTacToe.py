@@ -45,13 +45,20 @@ class TicTacToe:
     def nextTurn(self):
         return self.turn
 
-    def makeMove(self, row, col):
+    def get_all_possible_moves(self):
+        returnArr = []
+        for row in range(self.n):
+            for col in range(self.n):
+                if self.board[row][col] == None:
+                    returnArr.append([row, col])
+        return returnArr
 
+    def makeMove(self, move):
         if self.turn:
-            self.positionPlayer.append([row,col])
+            self.positionPlayer.append(move)
             self.turn = False
         else:
-            self.positionKI.append([row,col])
+            self.positionKI.append(move)
             self.turn = True
 
         self.genBoard()

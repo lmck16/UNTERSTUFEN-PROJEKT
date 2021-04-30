@@ -168,7 +168,7 @@ class Layout(tk.Tk):
     def gameHandler(self, figureJ, figureI, moveJ, moveI):
         print("MOVED ({}/{}) to ({}/{})".format(figureJ, figureI, moveJ, moveI))
         if self.ttt:
-            self.spiel.makeMove(moveJ, moveI)
+            self.spiel.makeMove([moveJ, moveI])
         else:
             self.spiel.makeMove([[figureJ, figureI], [moveJ, moveI]])
 
@@ -217,8 +217,7 @@ class Layout(tk.Tk):
             self.__checkWin()
 
             if self.spiel.getTurn() is False:
-                tmp = self.KI.kiTurn()
-                self.gameHandler(self.lockedJ, self.lockedI, tmp[1], tmp[0])
+                self.KI.move_computer_random()
                 self.resetBoard()
 
             self.__checkWin()
