@@ -1,6 +1,7 @@
 import sqlite3
 from uuid import uuid4
 from User import User
+from Settings import Settings
 
 class Database():
 
@@ -25,6 +26,8 @@ class Database():
         self.connection.commit()
         self.connection.close()
 
+        sql = 'CREATE TABLE "userSettings" ( "userSettings_id"	INTEGER NOT NULL UNIQUE, "depth_ttt" INTEGER NOT NULL, "depth_dame"	INTEGER NOT NULL,	"depth_bauernschach"	INTEGER NOT NULL,	"colorKI"	INTEGER NOT NULL,	"colorPlayer"	INTEGER NOT NULL,	"user_id"	INTEGER NOT NULL,	PRIMARY KEY("userSettings_id" AUTOINCREMENT));'
+
     def login(self, username, password):
         self.connection = sqlite3.connect(self.databaseFile)
         self.cursor = self.connection.cursor()
@@ -40,6 +43,55 @@ class Database():
         for row in records:
             return User(username, password, row[0])
 
+    def getUserSettings(self, user):
+        self.connection = sqlite3.connect(self.databaseFile)
+        self.cursor = self.connection.cursor()
+
+        sql = "SELECT * FROM userSettings WHERE user_id = '{}' limit 1".format(user.getId())
+
+        self.cursor.execute(sql)
+        records = self.cursor.fetchall()
+        self.cursor.close()
+        self.connection.commit()
+        self.connection.close()
+
+        for row in records:
+            return Settings(row[2], row[1], row[3], row[4], row[5])
+        self.insertUserSettings(Settings(), user)
+        return Settings()
+
+    def insertUserSettings(self, settings, user):
+        self.connection = sqlite3.connect(self.databaseFile)
+        self.cursor = self.connection.cursor()
+
+        sql = "INSERT INTO userSettings VALUES(NULL, '{}', '{}', '{}', '{}', '{}', '{}')".format(
+            settings.getDepth("Tic Tac Toe"), 
+            settings.getDepth("Dame"),
+            settings.getDepth("Bauernschach"),
+            settings.getColorKi(),
+            settings.getColorPlayer(),
+            user.getId())
+
+        self.cursor.execute(sql)
+        self.connection.commit()
+        self.connection.close()
+
+    def updateUserSettings(self, settings, user):
+        self.connection = sqlite3.connect(self.databaseFile)
+        self.cursor = self.connection.cursor()
+
+        sql = "UPDATE userSettings SET depth_ttt = '{}', depth_dame = '{}', depth_bauernschach = '{}', colorKI = '{}', colorPlayer = '{}' WHERE user_id = {};".format(
+            settings.getDepth("Tic Tac Toe"), 
+            settings.getDepth("Dame"),
+            settings.getDepth("Bauernschach"),
+            settings.getColorKi(),
+            settings.getColorPlayer(),
+            user.getId())
+
+        self.cursor.execute(sql)
+        self.connection.commit()
+        self.connection.close()
+
     def userAlreadyExists(self, username):
         self.connection = sqlite3.connect(self.databaseFile)
         self.cursor = self.connection.cursor()
@@ -53,7 +105,6 @@ class Database():
         self.connection.close()
 
         for row in records:
-            print(row)
             return True
         return False
 
@@ -69,7 +120,7 @@ class Database():
             self.connection.close()
             return True
         else: return False
-        
+
     def getGameSession(self, usrId, dpName):
         self.connection = sqlite3.connect(self.databaseFile)
         self.cursor = self.connection.cursor()

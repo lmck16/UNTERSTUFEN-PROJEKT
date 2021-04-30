@@ -1,11 +1,15 @@
 import tkinter as tk
 from tkinter import *
 from tkinter import messagebox
+from tkinter import colorchooser
 from User import User
 from Database import Database
+from Settings import Settings
 
 
 class PageHandler(tk.Tk):
+
+
 
     user = "{USERNAME}"
 
@@ -18,6 +22,13 @@ class PageHandler(tk.Tk):
         super().__init__()
 
         self.db = Database()
+        self.userSettings = Settings()
+
+        self.colorKi = {}
+        self.colorPlayer = {}
+
+        self.colorKi['hex'] = self.userSettings.getColorKi()
+        self.colorPlayer['hex'] = self.userSettings.getColorPlayer()
 
 
         self.resizable(False,False)
@@ -47,6 +58,8 @@ class PageHandler(tk.Tk):
         if self.db.login(username, pw) is not None: self.user = self.db.login(username, pw)
         else: return
 
+        self.userSettings = self.db.getUserSettings(self.user)
+
         self.gamemodePage()
 
     def reg(self):
@@ -54,14 +67,84 @@ class PageHandler(tk.Tk):
         username = self.usernameEntry.get()
 
         if self.db.insertNewUser(username, pw) is False: messagebox.showinfo("USER EXISTIERT BEREITS", "USER EXISTIERT BEREITS")
-        else: self.loginPage()
+        else: 
+            self.loginPage()
+
+    def settingsPage(self):
+        self.resetWindow()
+        self.geometry("{}x{}".format(330,300))
+        self.grid_rowconfigure(7, minsize=100)
+        self.grid_rowconfigure(4, minsize=0)
+
+        self.title("EINSTELLUNGEN")
+
+        self.mainText = tk.Label(self, text="EINSTELLUNGEN", font='Helvetica 18 bold')
+        self.mainText.grid(row=1, column=2)
+
+        self.tttText = tk.Label(self, text="Tic Tac Toe Tiefe : ")
+        self.tttText.grid(row=2, column=1)
+        self.tttSlider = Scale(self, from_=5, to=15, orient=HORIZONTAL)
+        self.tttSlider.grid(row=2, column=2)
+        self.tttSlider.set(self.userSettings.getDepth("Tic Tac Toe"))
+
+        self.dameText = tk.Label(self, text="Dame Tiefe : ")
+        self.dameText.grid(row=3, column=1)
+        self.dameSlider = Scale(self, from_=5, to=15, orient=HORIZONTAL)
+        self.dameSlider.grid(row=3, column=2)
+        self.dameSlider.set(self.userSettings.getDepth("Dame"))
+
+        self.bauernschachText = tk.Label(self, text="Bauernschach Tiefe: ")
+        self.bauernschachText.grid(row=4, column=1)
+        self.bauernschachSlider = Scale(self, from_=5, to=15, orient=HORIZONTAL)
+        self.bauernschachSlider.grid(row=4, column=2)
+        self.bauernschachSlider.set(self.userSettings.getDepth("Bauernschach"))
+
+
+        self.colorKText = tk.Label(self, text="Farbe KI: ")
+        self.colorKText.grid(row=5, column=1)
+        self.colorKiButton = tk.Button(self, width = 15, bg=self.userSettings.getColorKi(), command = self.chooseColorKI)
+        self.colorKiButton.grid(row=5, column=2)
+
+        self.colorPlayerText = tk.Label(self, text="Farbe Spieler: ")
+        self.colorPlayerText.grid(row=6, column=1)
+        self.colorPlayerButton = tk.Button(self, width = 15, bg=self.userSettings.getColorPlayer(), command = self.chooseColorPlayer)
+        self.colorPlayerButton.grid(row=6, column=2)
+
+        self.backButton = tk.Button(self, text="<---", command=self.gamemodePage)
+        self.backButton.grid(row=7, column=1)
+
+        self.speichernButton = tk.Button(self, text="SPEICHERN", command=self.saveSettings)
+        self.speichernButton.grid(row=7, column=2)
+
+    def chooseColorKI(self):
+        self.colorKi['rgb'], self.colorKi['hex'] = colorchooser.askcolor(title ="Wähle eine Farbe")
+        self.colorKiButton.configure(bg=self.colorKi['hex'])
+        print(self.colorKi['hex'])
+
+    def chooseColorPlayer(self):
+        self.colorPlayer['rgb'], self.colorPlayer['hex'] = colorchooser.askcolor(title ="Wähle eine Farbe")
+        self.colorPlayerButton.configure(bg=self.colorPlayer['hex'])
+        print(self.colorKi['hex'])
+
+    def saveSettings(self):
+        self.userSettings = Settings(
+            self.dameSlider.get(),
+            self.tttSlider.get(),
+            self.bauernschachSlider.get(),
+            self.colorKi['hex'],
+            self.colorPlayer['hex']
+        )
+
+        self.db.updateUserSettings(self.userSettings, self.user)
+
+        self.gamemodePage()
 
     def registerPage(self):
         self.resetWindow()
 
         self.title("REGESTRIEREN")
 
-        self.mainText = tk.Label(self, text="REGISTRIEREN")
+        self.mainText = tk.Label(self, text="REGISTRIEREN", font='Helvetica 18 bold')
         self.mainText.grid(row=1, column=2)
 
         self.usernameText = tk.Label(self, text="USERNAME : ")
@@ -85,7 +168,7 @@ class PageHandler(tk.Tk):
 
         self.title("LOGIN")
 
-        self.mainText = tk.Label(self, text="LOGIN")
+        self.mainText = tk.Label(self, text="LOGIN", font='Helvetica 18 bold')
         self.mainText.grid(row=1, column=2)
 
         self.usernameText = tk.Label(self, text="USERNAME : ")
@@ -148,12 +231,13 @@ class PageHandler(tk.Tk):
         self.backButton = tk.Button(self, text="<---", command=self.loginPage)
         self.backButton.grid(row=4, column=1)
 
-        self.einstellungenButton = tk.Button(self, text="Einstellungen", command=self.void)
+        self.einstellungenButton = tk.Button(self, text="Einstellungen", command=self.settingsPage)
         self.einstellungenButton.grid(row=4, column=3)
 
-        self.einstellungenButton.config(state="disabled")
-
     def resetWindow(self):
+        self.geometry("{}x{}".format(330,200))
+        self.grid_rowconfigure(7, minsize=0)
+        self.grid_rowconfigure(4, minsize=100)
         for child in self.winfo_children():
             child.destroy()
 
@@ -172,17 +256,17 @@ class PageHandler(tk.Tk):
         if lay == "dame":
             from Dame import Dame
             game = Dame()
-            layout = Layout(game, self.user, self.db)
+            layout = Layout(game, self.user, self.db, self.userSettings)
         elif lay == "ttt":
             from TicTacToe import TicTacToe
             game = TicTacToe()
-            layout = Layout(game, self.user, self.db, True)
+            layout = Layout(game, self.user, self.db, self.userSettings, True)
         elif lay == "bauernschach":
             from pawnchess import PawnChess
             game = PawnChess()
-            layout = Layout(game, self.user, self.db)
+            layout = Layout(game, self.user, self.db, self.userSettings)
         elif lay == "history":
             from HistoryLayout import HistoryLayout
-            layout = HistoryLayout(self.user)
+            layout = HistoryLayout(self.user, self.userSettings)
 
         layout.mainloop()

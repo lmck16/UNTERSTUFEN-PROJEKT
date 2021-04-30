@@ -10,15 +10,20 @@ class HistoryLayout(tk.Tk):
 
     startRow = 6
 
-    def __init__(self, user):
+    def __init__(self, user, settings):
         super().__init__()
         self.resizable(False,False)
+
+        self.userSettings = settings
 
         self.user = user
 
         self.db = Database()
 
         self.colours = ["#fefefe", "#7f7f7f"]
+
+        self.colorUser = self.userSettings.getColorPlayer()
+        self.colorKI = self.userSettings.getColorKi()
 
         self.canvas = tk.Canvas(self, width=int(self.n*90), height=int(self.n*90))
         self.canvas.grid(row=0, column=0, columnspan=6, rowspan=6)
@@ -104,9 +109,7 @@ class HistoryLayout(tk.Tk):
         for child in self.winfo_children():
             child.destroy()
 
-    def initFigures(self, locationKI, locationUser, colorKI = "#ffff00", colorUser = "#ff0000"):
-        self.colorUser = colorUser
-        self.colorKI = colorKI
+    def initFigures(self, locationKI, locationUser):
         self.locationKI = locationKI
         self.locationUser = locationUser
 

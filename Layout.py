@@ -9,8 +9,10 @@ class Layout(tk.Tk):
     winsKI = 0
     winsPlayer = 0
 
-    def __init__(self, spiel, user, db, ttt=False):
+    def __init__(self, spiel, user, db, settings, ttt=False):
         super().__init__()
+
+        self.userSettings = settings
 
         self.db = db
 
@@ -22,8 +24,8 @@ class Layout(tk.Tk):
 
         self.locationKI = []
         self.locationUser = []
-        self.colorKI = "#ffff00"
-        self.colorUser = "#ff0000"
+        self.colorKI = self.userSettings.getColorKi()
+        self.colorUser = self.userSettings.getColorPlayer()
 
         self.lockedI = 0
         self.lockedJ = 0
@@ -93,9 +95,7 @@ class Layout(tk.Tk):
         for i in range(len(coords)):
             self.highlightFigure(coords[i][0], coords[i][1], color)
 
-    def initFigures(self, locationKI, locationUser, colorKI="#ffff00", colorUser="#ff0000"):
-        self.colorUser = colorUser
-        self.colorKI = colorKI
+    def initFigures(self, locationKI, locationUser):
         self.locationKI = locationKI
         self.locationUser = locationUser
 
@@ -129,8 +129,7 @@ class Layout(tk.Tk):
                 if self.board[i][j] is not None:
                     self.canvas.delete(self.board[i][j])
         self.drawboard()
-        if noFigures is False: self.initFigures(self.spiel.getPositionKI(), self.spiel.getPositionPlayer(),
-                                                self.colorKI, self.colorUser)
+        if noFigures is False: self.initFigures(self.spiel.getPositionKI(), self.spiel.getPositionPlayer())
 
         # self.locked = False
         # self.turn = not self.turn
