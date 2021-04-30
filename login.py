@@ -95,21 +95,36 @@ class PageHandler(tk.Tk):
 
         self.usernameEntry = tk.Entry(self)
         self.usernameEntry.grid(row=2, column=2)
+        if self.user.getId() > 0: 
+            self.usernameEntry.insert(0, self.user.getUsername())
+            self.usernameEntry.config(state='disabled') 
 
         self.passwortText = tk.Label(self, text="PASSWORT : ")
         self.passwortText.grid(row=3, column=1)
 
         self.passwortEntry = tk.Entry(self, show="*")
         self.passwortEntry.grid(row=3, column=2)
+        if self.user.getId() > 0: 
+            self.passwortEntry.insert(0, "XXXXXXXXXXX")
+            self.passwortEntry.config(state='disabled') 
 
-        self.loginButton = tk.Button(self, text="LOGIN", command=self.login)
-        self.loginButton.grid(row=4, column=2)
+        if self.user.getId() > 0: 
+            self.loginButton = tk.Button(self, text="ABMELDEN", command=self.logout)
+            self.loginButton.grid(row=4, column=2)
+        else:
+            self.loginButton = tk.Button(self, text="LOGIN", command=self.login)
+            self.loginButton.grid(row=4, column=2)
+
 
         self.noLoginButton = tk.Button(self, text="OHNE LOGIN", command=self.gamemodePage)
         self.noLoginButton.grid(row=4, column=1)
 
         self.registerButton = tk.Button(self, text="REGISTRIEREN", command=self.registerPage)
         self.registerButton.grid(row=4, column=3)
+
+    def logout(self):
+        self.user = User()
+        self.loginPage()
 
     def gamemodePage(self):
         self.resetWindow()
