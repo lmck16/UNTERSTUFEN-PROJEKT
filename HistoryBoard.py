@@ -6,9 +6,9 @@ class HistoryBoard():
         self.locationUser = []
 
     def setLocation(self, ki, user):
-        self.locationKI.append(ki)
+        self.locationKI.append(ki.copy())
         print(self.locationKI)
-        self.locationUser.append(user)
+        self.locationUser.append(user.copy())
 
     def mergeArrays(self):
         self.fullArr[0] = self.locationKI

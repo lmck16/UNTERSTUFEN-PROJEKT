@@ -6,7 +6,7 @@ class Database():
 
     databaseFile = "data.db"
 
-    def __init__(self): 
+    def start(self):
         self.connection = sqlite3.connect(self.databaseFile)
         self.cursor = self.connection.cursor()
 
@@ -14,7 +14,7 @@ class Database():
 
         self.cursor.execute(sql)
         self.connection.commit()
-        self.connection.close()    
+        self.connection.close()
 
         self.connection = sqlite3.connect(self.databaseFile)
         self.cursor = self.connection.cursor()
@@ -23,7 +23,7 @@ class Database():
 
         self.cursor.execute(sql)
         self.connection.commit()
-        self.connection.close()    
+        self.connection.close()
 
     def login(self, username, password):
         self.connection = sqlite3.connect(self.databaseFile)
