@@ -6,8 +6,24 @@ class Database():
 
     databaseFile = "data.db"
 
-    #def __init__(self): 
-        
+    def __init__(self): 
+        self.connection = sqlite3.connect(self.databaseFile)
+        self.cursor = self.connection.cursor()
+
+        sql = 'CREATE TABLE "gameSession" ("gameSession_id"	TEXT NOT NULL UNIQUE,"winner"	INTEGER NOT NULL,"board"	INTEGER NOT NULL,"user_id"	INTEGER NOT NULL,"game"	INTEGER NOT NULL,PRIMARY KEY("gameSession_id"));'
+
+        self.cursor.execute(sql)
+        self.connection.commit()
+        self.connection.close()    
+
+        self.connection = sqlite3.connect(self.databaseFile)
+        self.cursor = self.connection.cursor()
+
+        sql = 'CREATE TABLE "user" ( "user_id"	INTEGER NOT NULL UNIQUE, "username"	TEXT NOT NULL, "password"	TEXT NOT NULL,PRIMARY KEY("user_id" AUTOINCREMENT));'
+
+        self.cursor.execute(sql)
+        self.connection.commit()
+        self.connection.close()    
 
     def login(self, username, password):
         self.connection = sqlite3.connect(self.databaseFile)
