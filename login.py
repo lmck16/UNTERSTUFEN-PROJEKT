@@ -231,8 +231,9 @@ class PageHandler(tk.Tk):
         self.backButton = tk.Button(self, text="<---", command=self.loginPage)
         self.backButton.grid(row=4, column=1)
 
-        self.einstellungenButton = tk.Button(self, text="Einstellungen", command=self.settingsPage)
-        self.einstellungenButton.grid(row=4, column=3)
+        if self.user.getId() > 0:
+            self.einstellungenButton = tk.Button(self, text="Einstellungen", command=self.settingsPage)
+            self.einstellungenButton.grid(row=4, column=3)
 
     def resetWindow(self):
         self.geometry("{}x{}".format(330,200))
