@@ -9,15 +9,6 @@ from Settings import Settings
 
 class PageHandler(tk.Tk):
 
-
-
-    user = "{USERNAME}"
-
-    runningGames = []
-    runningLayouts = []
-
-    board = None
-
     def __init__(self):
         super().__init__()
 

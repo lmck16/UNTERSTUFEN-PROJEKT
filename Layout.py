@@ -2,6 +2,7 @@ import tkinter as tk
 from ki import KI
 from tkinter import messagebox
 from HistoryBoard import HistoryBoard
+from Rules import RulesLayout
 
 
 class Layout(tk.Tk):
@@ -46,22 +47,28 @@ class Layout(tk.Tk):
 
         self.resizable(False, False)
         self.setScoreToDisplay(self.winsKI, self.winsPlayer)
-        self.geometry("{}x{}".format(int((self.n * 90)), int((self.n * 90) + 90)))
+        self.geometry("{}x{}".format(int((self.n * 90)), int((self.n * 90) + 35)))
 
         self.canvas = tk.Canvas(self, width=int(self.n * 90), height=int(self.n * 90))
         self.canvas.grid(row=0, column=0, columnspan=6, rowspan=6)
 
-        self.restartButton = tk.Button(self, text="{} neustarten".format(self.spiel.getDisplayname()),
-                                       command=self.newBoard)
+        self.restartButton = tk.Button(self, text="{} NEUSTARTEN".format(self.spiel.getDisplayname()), command=self.newBoard)
         self.restartButton.grid(row=7, column=0)
+
+        self.rulesButton = tk.Button(self, text="SPIELREGELN".format(self.spiel.getDisplayname()), command=self.rules)
+        self.rulesButton.grid(row=7, column=1)
+
+
 
         self.board = [[None for row in range(self.n)] for col in range(self.n)]
         self.figures = [[None for row in range(self.n)] for col in range(self.n)]
-        self.fieldObj = [[None for row in range(self.n)] for col in range(self.n)]
-        self.field = [[None for row in range(self.n)] for col in range(self.n)]
 
         self.drawboard()
         self.initFigures(self.spiel.getStartKI(), self.spiel.getStartPlayer())
+
+    def rules(self):
+        rulesLayout = RulesLayout(self.spiel.getDisplayname())
+        rulesLayout.mainloop()
 
     def setScoreToDisplay(self, ki, user):
         self.title(
