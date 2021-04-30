@@ -5,8 +5,8 @@ class PawnChess:
     displayname = "Bauernschach"
 
     def __init__(self):
-        self.startKI = [[0, 0], [1, 1], [0, 2], [1, 3], [0, 4], [1, 5]]
-        self.startPlayer = [[4, 0], [5, 1], [4, 2], [5, 3], [4, 4], [5, 5]]
+        self.startKI = [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4], [0, 5]]
+        self.startPlayer = [[5, 0], [5, 1], [5, 2], [5, 3], [5, 4], [5, 5]]
         # class-Variable für mögliche winning-condition
         self.end_game = [False, '']
         self.board = [['o', 'o', 'o', 'o', 'o', 'o'],
