@@ -116,6 +116,43 @@ class PageHandler(tk.Tk):
         self.speichernButton = tk.Button(self, text="SPEICHERN", command=self.saveSettings)
         self.speichernButton.grid(row=7, column=2)
 
+    def statsPage(self, game):
+        self.resetWindow()
+        self.geometry("{}x{}".format(360,500))
+        self.grid_rowconfigure(4, minsize=0)
+        
+        table = self.db.getGameStats(game)
+
+        self.title("Statistiken {}".format(game))
+
+        self.mainText = tk.Label(self, text=game, font='Helvetica 18 bold')
+        self.mainText.grid(row=1, column=2)
+
+        self.backButton = tk.Button(self, text="<---", command=self.gamemodePage)
+        self.backButton.grid(row=1, column=1)
+
+        self.headCol1 = tk.Label(self, text="Spieler")
+        self.headCol1.grid(row=2, column=1)
+
+        self.headCol2 = tk.Label(self, text="Gewinner")
+        self.headCol2.grid(row=2, column=2)
+
+        self.headCol3 = tk.Label(self, text="Tiefe")
+        self.headCol3.grid(row=2, column=3)
+
+        for row in range(3, len(table) + 3):
+            self.statTxT = tk.Label(self, text=table[row-3][1])
+            self.statTxT.grid(row=row, column=1)
+
+            if table[row-3][0] == "user": 
+                self.statTxT = tk.Label(self, text="Spieler")
+            else:
+                self.statTxT = tk.Label(self, text="KI")
+            self.statTxT.grid(row=row, column=2)
+
+            self.statTxT = tk.Label(self, text=table[row-3][2])
+            self.statTxT.grid(row=row, column=3)
+
     def chooseColorKI(self):
         self.colorKi['rgb'], self.colorKi['hex'] = colorchooser.askcolor(title ="Wähle eine Farbe")
         self.colorKiButton.configure(bg=self.colorKi['hex'])
@@ -192,13 +229,13 @@ class PageHandler(tk.Tk):
         if self.user.getId() > 0: 
             self.loginButton = tk.Button(self, text="ABMELDEN", command=self.logout)
             self.loginButton.grid(row=4, column=2)
+            self.noLoginButton = tk.Button(self, text="SPIELE", command=self.gamemodePage)
+            self.noLoginButton.grid(row=4, column=1)
         else:
             self.loginButton = tk.Button(self, text="LOGIN", command=self.login)
             self.loginButton.grid(row=4, column=2)
-
-
-        self.noLoginButton = tk.Button(self, text="OHNE LOGIN", command=self.gamemodePage)
-        self.noLoginButton.grid(row=4, column=1)
+            self.noLoginButton = tk.Button(self, text="OHNE LOGIN", command=self.gamemodePage)
+            self.noLoginButton.grid(row=4, column=1)
 
         self.registerButton = tk.Button(self, text="REGISTRIEREN", command=self.registerPage)
         self.registerButton.grid(row=4, column=3)
@@ -235,6 +272,15 @@ class PageHandler(tk.Tk):
             self.einstellungenButton = tk.Button(self, text="Einstellungen", command=self.settingsPage)
             self.einstellungenButton.grid(row=4, column=3)
 
+            self.einstellungenButton = tk.Button(self, text="Stats", command= lambda: self.statsPage("Bauernschach"))
+            self.einstellungenButton.grid(row=1, column=3)
+
+            self.einstellungenButton = tk.Button(self, text="Stats", command= lambda: self.statsPage("Dame"))
+            self.einstellungenButton.grid(row=2, column=3)
+
+            self.einstellungenButton = tk.Button(self, text="Stats", command= lambda: self.statsPage("Tic Tac Toe"))
+            self.einstellungenButton.grid(row=3, column=3)
+
     def resetWindow(self):
         self.geometry("{}x{}".format(330,200))
         self.grid_rowconfigure(7, minsize=0)
@@ -249,10 +295,6 @@ class PageHandler(tk.Tk):
         self.gamemodePage()
 
     def startLayout(self, lay):
-        #self.backButton.config(state="disabled")
-        #self.tictactoeButton.config(state="disabled")
-        #self.dameButton.config(state="disabled")
-        #self.bauernschachButton.config(state="disabled")
         from Layout import Layout
         if lay == "dame":
             from Dame import Dame

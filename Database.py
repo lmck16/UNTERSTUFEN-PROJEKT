@@ -11,22 +11,21 @@ class Database():
         self.connection = sqlite3.connect(self.databaseFile)
         self.cursor = self.connection.cursor()
 
-        sql = 'CREATE TABLE IF NOT EXISTS "gameSession"  ("gameSession_id"	TEXT NOT NULL UNIQUE,"winner"	INTEGER NOT NULL,"board"	INTEGER NOT NULL,"user_id"	INTEGER NOT NULL,"game"	INTEGER NOT NULL,PRIMARY KEY("gameSession_id"));'
-
+        sql = 'CREATE TABLE IF NOT EXISTS "gameSession" (	"gameSession_id"	TEXT NOT NULL UNIQUE,	"winner"	INTEGER NOT NULL,	"board"	INTEGER NOT NULL,	"user_id"	INTEGER NOT NULL,"game"	INTEGER NOT NULL,"depth"	INTEGER NOT NULL,PRIMARY KEY("gameSession_id"))'
         self.cursor.execute(sql)
-        self.connection.commit()
-        self.connection.close()
-
-        self.connection = sqlite3.connect(self.databaseFile)
-        self.cursor = self.connection.cursor()
 
         sql = 'CREATE TABLE IF NOT EXISTS "user" ( "user_id"	INTEGER NOT NULL UNIQUE, "username"	TEXT NOT NULL, "password"	TEXT NOT NULL,PRIMARY KEY("user_id" AUTOINCREMENT));'
-
         self.cursor.execute(sql)
+
+        sql = 'CREATE TABLE IF NOT EXISTS "userSettings" ( "userSettings_id"	INTEGER NOT NULL UNIQUE, "depth_ttt" INTEGER NOT NULL, "depth_dame"	INTEGER NOT NULL,	"depth_bauernschach"	INTEGER NOT NULL,	"colorKI"	INTEGER NOT NULL,	"colorPlayer"	INTEGER NOT NULL,	"user_id"	INTEGER NOT NULL,	PRIMARY KEY("userSettings_id" AUTOINCREMENT));'
+        self.cursor.execute(sql)
+
+        sql = 'CREATE VIEW IF NOT EXISTS gameStats AS SELECT gameSession.winner, gameSession.game, gameSession.depth, user.username FROM gameSession INNER JOIN user ON gameSession.user_id=user.user_id'
+        self.cursor.execute(sql)
+
+
         self.connection.commit()
         self.connection.close()
-
-        sql = 'CREATE TABLE "userSettings" ( "userSettings_id"	INTEGER NOT NULL UNIQUE, "depth_ttt" INTEGER NOT NULL, "depth_dame"	INTEGER NOT NULL,	"depth_bauernschach"	INTEGER NOT NULL,	"colorKI"	INTEGER NOT NULL,	"colorPlayer"	INTEGER NOT NULL,	"user_id"	INTEGER NOT NULL,	PRIMARY KEY("userSettings_id" AUTOINCREMENT));'
 
     def login(self, username, password):
         self.connection = sqlite3.connect(self.databaseFile)
@@ -137,14 +136,32 @@ class Database():
 
         return records
 
-    def insertGameSession(self, winner, board, usrId, dpName):
+    def insertGameSession(self, winner, board, usrId, dpName, depth):
         session = uuid4()   
 
         self.connection = sqlite3.connect(self.databaseFile)
         self.cursor = self.connection.cursor()
 
-        sql = "INSERT INTO gameSession VALUES('{}', '{}', '{}', '{}', '{}')".format(session, winner, board, usrId, dpName)
+        sql = "INSERT INTO gameSession VALUES('{}', '{}', '{}', '{}', '{}', '{}')".format(session, winner, board, usrId, dpName, depth)
 
         self.cursor.execute(sql)
         self.connection.commit()
         self.connection.close() 
+
+
+    def getGameStats(self, game):
+
+        self.connection = sqlite3.connect(self.databaseFile)
+        self.cursor = self.connection.cursor()
+
+        sql = "SELECT winner, username, depth FROM gameStats WHERE game = '{}' ORDER BY depth DESC LIMIT 15".format(game)
+
+        self.cursor.execute(sql)
+
+        records = self.cursor.fetchall()
+
+        self.cursor.close()
+        self.connection.commit()
+        self.connection.close()
+
+        return records

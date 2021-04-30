@@ -237,12 +237,16 @@ class Layout(tk.Tk):
                 self.winsPlayer = self.winsPlayer + 1
                 messagebox.showinfo("GEWONNEN", "SIE HABEN GEWONNEN")
                 if self.user.getId() > 0: self.db.insertGameSession("user", self.hrBoard.getAllRounds(),
-                                                                    self.user.getId(), self.spiel.getDisplayname())
+                                                                    self.user.getId(), 
+                                                                    self.spiel.getDisplayname(),
+                                                                    self.userSettings.getDepth(self.spiel.getDisplayname()))
             else:
                 self.winsKI = self.winsKI + 1
                 messagebox.showinfo("VERLOREN", "SIE HABEN VERLOREN")
                 if self.user.getId() > 0: self.db.insertGameSession("ki", self.hrBoard.getAllRounds(),
-                                                                    self.user.getId(), self.spiel.getDisplayname())
+                                                                    self.user.getId(), 
+                                                                    self.spiel.getDisplayname(),
+                                                                    self.userSettings.getDepth(self.spiel.getDisplayname()))
             self.hrBoard.reset()
             self.setScoreToDisplay(self.winsKI, self.winsPlayer)
             self.resetBoard(True)
