@@ -1,11 +1,11 @@
 import sqlite3
 from uuid import uuid4
-from User import User
-from Settings import Settings
+from Class.User import User
+from Class.Settings import Settings
 
 class Database():
 
-    databaseFile = "data.db"
+    databaseFile = "data/data.db"
 
     def start(self):
         self.connection = sqlite3.connect(self.databaseFile)

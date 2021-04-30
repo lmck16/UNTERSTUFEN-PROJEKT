@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import *
-from Database import Database
+from Class.Database import Database
 from ast import literal_eval
 from functools import partial
 

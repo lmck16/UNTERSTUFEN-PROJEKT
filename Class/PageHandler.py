@@ -2,9 +2,9 @@ import tkinter as tk
 from tkinter import *
 from tkinter import messagebox
 from tkinter import colorchooser
-from User import User
-from Database import Database
-from Settings import Settings
+from Class.User import User
+from Class.Database import Database
+from Class.Settings import Settings
 
 
 class PageHandler(tk.Tk):
@@ -286,21 +286,21 @@ class PageHandler(tk.Tk):
         self.gamemodePage()
 
     def startLayout(self, lay):
-        from Layout import Layout
+        from Class.Layout import Layout
         if lay == "dame":
-            from Dame import Dame
+            from Class.Dame import Dame
             game = Dame()
             layout = Layout(game, self.user, self.db, self.userSettings)
         elif lay == "ttt":
-            from TicTacToe import TicTacToe
+            from Class.TicTacToe import TicTacToe
             game = TicTacToe()
             layout = Layout(game, self.user, self.db, self.userSettings, True)
         elif lay == "bauernschach":
-            from pawnchess import PawnChess
+            from Class.Pawnchess import PawnChess
             game = PawnChess()
             layout = Layout(game, self.user, self.db, self.userSettings)
         elif lay == "history":
-            from HistoryLayout import HistoryLayout
+            from Class.HistoryLayout import HistoryLayout
             layout = HistoryLayout(self.user, self.userSettings)
 
         layout.mainloop()

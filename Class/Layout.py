@@ -1,8 +1,8 @@
 import tkinter as tk
-from ki import KI
+from Class.Ki import KI
 from tkinter import messagebox
-from HistoryBoard import HistoryBoard
-from Rules import RulesLayout
+from Class.HistoryBoard import HistoryBoard
+from Class.Rules import RulesLayout
 
 
 class Layout(tk.Tk):

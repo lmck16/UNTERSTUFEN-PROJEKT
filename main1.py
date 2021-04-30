@@ -1,5 +1,5 @@
-from Dame import Dame
-from Dame import sys
+from Class.Dame import Dame
+from Class.Dame import sys
 import random
 
 

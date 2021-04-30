@@ -1,10 +1,10 @@
-from login import PageHandler
-from Database import Database
+from Class.PageHandler import PageHandler
+from Class.Database import Database
 from pathlib import Path
 
 if __name__ == "__main__":
 
-    my_file = Path("data.db")
+    my_file = Path("data/data.db")
     if my_file.is_file():
         db = Database()
         db.start()
