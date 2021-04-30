@@ -18,6 +18,20 @@ class PawnChess:
         self.length = 6
         self.current_player = "x"
 
+    def newGame(self):
+        self.startKI = [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4], [0, 5]]
+        self.startPlayer = [[5, 0], [5, 1], [5, 2], [5, 3], [5, 4], [5, 5]]
+        # class-Variable für mögliche winning-condition
+        self.end_game = [False, '']
+        self.board = [['o', 'o', 'o', 'o', 'o', 'o'],
+                      [' ', ' ', ' ', ' ', ' ', ' '],
+                      [' ', ' ', ' ', ' ', ' ', ' '],
+                      [' ', ' ', ' ', ' ', ' ', ' '],
+                      [' ', ' ', ' ', ' ', ' ', ' '],
+                      ['x', 'x', 'x', 'x', 'x', 'x']]
+        self.length = 6
+        self.current_player = "x"
+
     def print_board(self):
         print()
         print("       0     1     2     3     4     5  ")
@@ -69,7 +83,7 @@ class PawnChess:
         else:
             self.current_player = 'x'
 
-    def check_winning_conditions(self):
+    def checkWin(self):
         if len(self.get_all_possible_moves()) == 0:
             if self.current_player == 'x':
                 return 'o'
@@ -104,9 +118,9 @@ class PawnChess:
             enemy_player = "o"
         
         if self.current_player == 'x':
-            neighbours = [[1, -1], [1, 0], [1, 1]]
-        else:
             neighbours = [[-1, -1], [-1, 0], [-1, 1]]
+        else:
+            neighbours = [[1, -1], [1, 0], [1, 1]]
         
         possibleMoves = []
 
@@ -116,11 +130,11 @@ class PawnChess:
                 new_col = col + neighbours[index][1]
                 if 0 <= new_row < len(self.board) and 0 <= new_col < len(self.board[row]):
                     if index == 1 and self.board[new_row][new_col] == ' ':
-                        possibleMoves.append([[row, col], [new_row, new_col]])
+                        possibleMoves.append([new_row, new_col])
                     if index == 0 and self.board[new_row][new_col] == enemy_player:
-                        possibleMoves.append([[row, col], [new_row, new_col]])
+                        possibleMoves.append([new_row, new_col])
                     if index == 2 and self.board[new_row][new_col] == enemy_player:
-                        possibleMoves.append([[row, col], [new_row, new_col]])
+                        possibleMoves.append([new_row, new_col])
         return possibleMoves
 
     def get_all_possible_moves(self):
@@ -130,9 +144,9 @@ class PawnChess:
             enemy_player = "o"
         
         if self.current_player == 'x':
-            neighbours = [[1, -1], [1, 0], [1, 1]]
-        else:
             neighbours = [[-1, -1], [-1, 0], [-1, 1]]
+        else:
+            neighbours = [[1, -1], [1, 0], [1, 1]]
         
         possibleMoves = []
        
