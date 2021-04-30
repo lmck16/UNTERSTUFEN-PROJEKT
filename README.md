@@ -10,3 +10,4 @@
   - Speicherung der Bestenlisten in einer SQLite-Datenbank
 - KI mit Minimax
 - Einstellungen
+- Spielregel-Button im Spielefenster
