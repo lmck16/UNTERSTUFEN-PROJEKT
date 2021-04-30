@@ -32,25 +32,44 @@ class Database():
         sql = "SELECT * FROM user WHERE username = '{}' AND password = '{}' limit 1".format(username, password)
 
         self.cursor.execute(sql)
-
         records = self.cursor.fetchall()
-        for row in records:
-            return User(username, password, row[0])
-
         self.cursor.close()
         self.connection.commit()
         self.connection.close()
 
-    def insertNewUser(self, username, password):
+        for row in records:
+            return User(username, password, row[0])
+
+    def userAlreadyExists(self, username):
         self.connection = sqlite3.connect(self.databaseFile)
         self.cursor = self.connection.cursor()
 
-        sql = "INSERT INTO user VALUES(NULL, '{}', '{}')".format(username, password)
+        sql = "SELECT * FROM user WHERE username = '{}' limit 1".format(username)
 
         self.cursor.execute(sql)
+        records = self.cursor.fetchall()
+        self.cursor.close()
         self.connection.commit()
         self.connection.close()
-    
+
+        for row in records:
+            print(row)
+            return True
+        return False
+
+    def insertNewUser(self, username, password):
+        if self.userAlreadyExists(username) is False:
+            self.connection = sqlite3.connect(self.databaseFile)
+            self.cursor = self.connection.cursor()
+
+            sql = "INSERT INTO user VALUES(NULL, '{}', '{}')".format(username, password)
+
+            self.cursor.execute(sql)
+            self.connection.commit()
+            self.connection.close()
+            return True
+        else: return False
+        
     def getGameSession(self, usrId, dpName):
         self.connection = sqlite3.connect(self.databaseFile)
         self.cursor = self.connection.cursor()
@@ -60,7 +79,7 @@ class Database():
         self.cursor.execute(sql)
 
         records = self.cursor.fetchall()
-        
+
         self.cursor.close()
         self.connection.commit()
         self.connection.close()

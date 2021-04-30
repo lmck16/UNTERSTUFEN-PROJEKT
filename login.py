@@ -53,9 +53,8 @@ class PageHandler(tk.Tk):
         pw = self.passwortEntry.get()
         username = self.usernameEntry.get()
 
-        self.db.insertNewUser(username, pw)
-
-        self.loginPage()
+        if self.db.insertNewUser(username, pw) is False: messagebox.showinfo("USER EXISTIERT BEREITS", "USER EXISTIERT BEREITS")
+        else: self.loginPage()
 
     def registerPage(self):
         self.resetWindow()
