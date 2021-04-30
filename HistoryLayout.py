@@ -32,7 +32,7 @@ class HistoryLayout(tk.Tk):
 
         self.btn = []
 
-        self.ttt = self.db.getGameSession(self.user.getId(), "Tic Tac Toe")
+        self.ttt = self.db.getGameSession(self.user.getId(), "Dame")
 
 
 

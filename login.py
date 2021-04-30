@@ -118,7 +118,7 @@ class PageHandler(tk.Tk):
         self.mainText = tk.Label(self, text="SPIELMODUS")
         self.mainText.grid(row=0, column=2)
 
-        self.bauernschachButton = tk.Button(self, text="BAUERNSCHACH", command= lambda: self.startLayout("baurenschach"), width = 15)
+        self.bauernschachButton = tk.Button(self, text="BAUERNSCHACH", command= lambda: self.startLayout("bauernschach"), width = 15)
         self.bauernschachButton.grid(row=1, column=2)
 
         self.dameButton = tk.Button(self, text="DAME", command= lambda: self.startLayout("dame"), width = 15)
@@ -163,10 +163,10 @@ class PageHandler(tk.Tk):
             from TicTacToe import TicTacToe
             game = TicTacToe()
             layout = Layout(game, self.user, self.db, True)
-        elif lay == "baurenschach":
+        elif lay == "bauernschach":
             from pawnchess import PawnChess
             game = PawnChess()
-            layout = Layout(game, self.user)
+            layout = Layout(game, self.user, self.db)
         elif lay == "history":
             from HistoryLayout import HistoryLayout
             layout = HistoryLayout(self.user)

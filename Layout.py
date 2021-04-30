@@ -226,11 +226,14 @@ class Layout(tk.Tk):
 
                 self.gameHandler(self.lockedJ, self.lockedI, j, i)
                 self.resetBoard()
+                self.__checkWin()
 
                 self.highlightField(j + 1, i + 1)
                 if self.spiel.getTurn() is False:
                     self.KI.move_computer_random()
                     self.resetBoard()
+                    self.__checkWin()
+
 
     def __checkWin(self):
         if self.spiel.checkWin():

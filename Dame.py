@@ -97,15 +97,15 @@ class Dame:
     # 1. Keine Züge mehr möglich
     # 2. Oberen/Unteren Rand mit einer Figur erreicht
     # 3. Kein Stein mehr vorhanden
-    def check_winning_conditions(self):
+    def checkWin(self):
         if len(self.get_all_possible_moves()) == 0:
             if self.current_player == 'x':
-                return 'o'
+                return True
             else:
-                return 'x'
+                return True
         if self.end_game[0]:
-            return self.end_game[1]
-        return None
+            return True
+        return False
 
     # TODO: rekursion einbauen
     # TODO: minimax?!
