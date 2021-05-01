@@ -1,4 +1,4 @@
-class Settings():
+class Settings:
 
     def __init__(self, dame = 5, ttt = 5, bauernschach = 5, colorKi = "#ffff00", colorPlayer = "#ff0000"):
         self.depth = dict()

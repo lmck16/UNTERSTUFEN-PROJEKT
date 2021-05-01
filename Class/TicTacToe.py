@@ -45,6 +45,21 @@ class TicTacToe:
     def nextTurn(self):
         return self.turn
 
+    def checkDraw(self):
+        for row in range(len(self.board)):
+                for col in range(len(self.board)):
+                    if self.board[row][col] is None
+                        return False   
+        return True
+
+    def checkWinForMark(self, sym)
+        if sym == "X" and self.turn is False and self.checkWin(): 
+            return True
+        elif sym == "O" and self.turn is True and self.checkWin(): 
+            return True
+        else: 
+            return False
+
     def get_all_possible_moves(self):
         returnArr = []
         for row in range(self.n):

@@ -43,7 +43,7 @@ class Layout(tk.Tk):
 
         if self.ttt: self.colours[1] = self.colours[0]
 
-        self.KI = KI(self.spiel)
+        self.KI = KI(self.spiel, self.userSettings)
 
         self.resizable(False, False)
         self.setScoreToDisplay(self.winsKI, self.winsPlayer)
