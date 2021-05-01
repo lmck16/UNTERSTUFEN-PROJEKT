@@ -40,19 +40,18 @@ class KI:
 
     def minimax(self, depth, isMaximizing, r = None, c = None):
         if depth < 3:
-            if r is not None and c is not None:
-                if (self.spiel.checkWinForMark("x")):
-                    return -1000
-                #elif self.spiel.checkBlocked2(r, c, "x"):
-                #    return 10
-                elif (self.spiel.checkWinForMark("o")):
-                    return 21
-                elif (self.spiel.checkDraw()):
-                    return 0
-                #elif self.spiel.checkBlocked2(r, c, "x"):
-                #    return 10
-                #elif self.spiel.checkBetween(r, c, "x"):
-                #    return 10
+            if (self.spiel.checkWinForMark("x")):
+                return -1000
+            elif self.spiel.checkBlocked3(r, c, "x"):
+                return 10
+            elif (self.spiel.checkWinForMark("o")):
+                return 21
+            elif (self.spiel.checkDraw()):
+                return 0
+            elif self.spiel.checkBlocked2(r, c, "x"):
+                return 10
+            elif self.spiel.checkBetween(r, c, "x"):
+                return 10
 
 
             if (isMaximizing):

@@ -49,6 +49,7 @@ class TicTacToe:
         return self.turn
 
     def checkBlocked2(self, row, col, sym):
+        if row is None and col is None: return False
         if row > 1:
             if self.board[row-1][col] == sym and self.board[row-2][col] == sym: return True
         elif row < 4:
@@ -68,6 +69,7 @@ class TicTacToe:
         return False
 
     def checkBlocked3(self, row, col, sym):
+        if row is None and col is None: return False
         if row > 2:
             if self.board[row-1][col] == sym and self.board[row-2][col] == sym and self.board[row-3][col] == sym: return True
         elif row < 3:
@@ -87,6 +89,7 @@ class TicTacToe:
         return False
 
     def checkBetween(self, row, col, sym):
+        if row is None and col is None: return False
         if row > 1 and row < 4:
             if self.board[row-1][col] == sym and self.board[row+1][col] == sym: return True
         if col > 1 and col < 4:
