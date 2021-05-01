@@ -44,6 +44,17 @@ class Dame:
     def getStartKI(self):
         return self.startKI
 
+    def checkWinForMark(self, sym):
+        if sym == "x" and self.turn is False and self.checkWin(): 
+            return True
+        elif sym == "o" and self.turn is True and self.checkWin(): 
+            return True
+        else: 
+            return False
+
+    def checkDraw(self):
+        return False
+
     def getStartPlayer(self):
         return self.startPlayer
 

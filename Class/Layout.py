@@ -166,10 +166,11 @@ class Layout(tk.Tk):
             self.highlightMultipleFigures(self.spiel.get_movable_figures(), "#800000")
 
     def gameHandler(self, figureJ, figureI, moveJ, moveI):
-        print("MOVED ({}/{}) to ({}/{})".format(figureJ, figureI, moveJ, moveI))
         if self.ttt:
+            print("CREATED ({}/{})".format(moveJ, moveI))
             self.spiel.makeMove([moveJ, moveI])
         else:
+            print("MOVED ({}/{}) to ({}/{})".format(figureJ, figureI, moveJ, moveI))
             self.spiel.makeMove([[figureJ, figureI], [moveJ, moveI]])
 
     def __isInArray(self, arr, i, j):
