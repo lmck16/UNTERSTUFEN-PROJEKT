@@ -7,6 +7,7 @@ class PawnChess:
     def __init__(self):
         self.startKI = [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4], [0, 5]]
         self.startPlayer = [[5, 0], [5, 1], [5, 2], [5, 3], [5, 4], [5, 5]]
+        self.doubleMove = False
         # class-Variable für mögliche winning-condition
         self.end_game = [False, '']
         self.board = [['o', 'o', 'o', 'o', 'o', 'o'],
@@ -21,6 +22,7 @@ class PawnChess:
     def newGame(self):
         self.startKI = [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4], [0, 5]]
         self.startPlayer = [[5, 0], [5, 1], [5, 2], [5, 3], [5, 4], [5, 5]]
+        self.doubleMove = False
         # class-Variable für mögliche winning-condition
         self.end_game = [False, '']
         self.board = [['o', 'o', 'o', 'o', 'o', 'o'],
