@@ -233,6 +233,8 @@ class Layout(tk.Tk):
                 self.__checkWin()
 
                 self.highlightField(j + 1, i + 1)
+                if self.spiel.doubleMove is True:
+                    self.__figurePressed(event, j, i, "#ffffff")
                 if self.spiel.getTurn() is False:
                     self.KI.move_computer_random()
                     self.resetBoard()

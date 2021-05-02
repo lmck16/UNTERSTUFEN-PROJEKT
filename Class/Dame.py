@@ -7,32 +7,36 @@ class Dame:
 
     # Feld initialisieren, aktuellen Spieler auf 'x' setzen
     def __init__(self):
-        self.startKI = [[0, 0], [1, 1], [0, 2], [1, 3], [0, 4], [1, 5]]
+        self.startKI = [[3, 3], [1, 1], [0, 2], [1, 3], [0, 4], [3, 1]]
         self.startPlayer = [[4, 0], [5, 1], [4, 2], [5, 3], [4, 4], [5, 5]]
+        self.doubleMove = False
+        self.doubleMovePos = []
 
         # class-Variable für mögliche winning-condition
         self.end_game = [False, '']
 
-        self.board = [['o', ' ', 'o', ' ', 'o', ' '],
-                      [' ', 'o', ' ', 'o', ' ', 'o'],
+        self.board = [[' ', ' ', 'o', ' ', 'o', ' '],
+                      [' ', 'o', ' ', 'o', ' ', ' '],
                       [' ', ' ', ' ', ' ', ' ', ' '],
-                      [' ', ' ', ' ', ' ', ' ', ' '],
+                      [' ', 'o', ' ', 'o', ' ', ' '],
                       ['x', ' ', 'x', ' ', 'x', ' '],
                       [' ', 'x', ' ', 'x', ' ', 'x']]
         self.length = 6
         self.current_player = "x"
 
     def newGame(self):
-        self.startKI = [[0, 0], [1, 1], [0, 2], [1, 3], [0, 4], [1, 5]]
+        self.startKI = [[3, 3], [1, 1], [0, 2], [1, 3], [0, 4], [3, 1]]
         self.startPlayer = [[4, 0], [5, 1], [4, 2], [5, 3], [4, 4], [5, 5]]
+        self.doubleMove = False
+        self.doubleMovePos = []
 
         # class-Variable für mögliche winning-condition
         self.end_game = [False, '']
 
-        self.board = [['o', ' ', 'o', ' ', 'o', ' '],
-                      [' ', 'o', ' ', 'o', ' ', 'o'],
+        self.board = [[' ', ' ', 'o', ' ', 'o', ' '],
+                      [' ', 'o', ' ', 'o', ' ', ' '],
                       [' ', ' ', ' ', ' ', ' ', ' '],
-                      [' ', ' ', ' ', ' ', ' ', ' '],
+                      [' ', 'o', ' ', 'o', ' ', ' '],
                       ['x', ' ', 'x', ' ', 'x', ' '],
                       [' ', 'x', ' ', 'x', ' ', 'x']]
         self.length = 6
@@ -151,21 +155,60 @@ class Dame:
         # werden
         if abs(end[0] - start[0]) == 2:
             self.board[(end[0] + start[0]) // 2][(end[1] + start[1]) // 2] = ' '
+            if len(self.get_possible_moves_with_enemy(end[0], end[1])) > 0:
+                self.doubleMove = True
+        else:
+            self.doubleMove = False
 
         # Nach jedem Zug den aktuellen Spieler wechseln
-        if self.current_player == 'x':
-            self.current_player = 'o'
-        else:
-            self.current_player = 'x'
+        if self.doubleMove is False:
+            if self.current_player == 'x':
+                self.current_player = 'o'
+            else:
+                self.current_player = 'x'
 
     def get_movable_figures(self):
-        possible_moves = self.get_all_possible_moves()
-        movable_figures = [i[0] for i in possible_moves]
-        movable_figures_no_dupe = []
-        for i in movable_figures:
-            i = tuple(i)
-            movable_figures_no_dupe.append(i)
-        return list(dict.fromkeys(movable_figures_no_dupe))
+        if self.doubleMove is True:
+            return self.doubleMovePos
+        else:
+            possible_moves = self.get_all_possible_moves()
+            movable_figures = [i[0] for i in possible_moves]
+            movable_figures_no_dupe = []
+            for i in movable_figures:
+                i = tuple(i)
+                movable_figures_no_dupe.append(i)
+            return list(dict.fromkeys(movable_figures_no_dupe))
+
+    def get_possible_moves_with_enemy(self, row, col):
+        self.doubleMovePos = [[row, col]]
+        if self.current_player == 'o':
+            enemy_player = 'x'
+        else:
+            enemy_player = 'o'
+
+        if self.current_player == 'x':
+            neighbors = [[-1, -1], [-1, 1], [1, -1], [1, 1]]
+        else:
+            neighbors = [[1, -1], [1, 1], [-1, -1], [-1, 1]]
+
+        possible_moves_with_enemy = []
+
+        if self.board[row][col].lower() == self.current_player:
+            for index in range(4):
+                if self.board[row][col].islower() and index > 1:
+                    continue
+
+                new_row = row + neighbors[index][0]
+                new_col = col + neighbors[index][1]
+                if 0 <= new_row < len(self.board) and 0 <= new_col < len(self.board[row]):
+                    # wenn ein Gegner geschlagen werden kann wird eine seperate Liste erstellt
+                    if self.board[new_row][new_col].lower() == enemy_player:
+                        new_row = new_row + neighbors[index][0]
+                        new_col = new_col + neighbors[index][1]
+                        if 0 <= new_row < len(self.board) and 0 <= new_col < len(self.board[row]) and \
+                                self.board[new_row][new_col] == ' ':
+                            possible_moves_with_enemy.append([new_row, new_col])
+        return possible_moves_with_enemy
 
     def get_possible_moves_clicked(self, row, col):
         # Wert der Figuren des anderen Spielers setzen
