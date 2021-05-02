@@ -184,7 +184,7 @@ class Layout(tk.Tk):
         self.resetBoard()
         if self.ttt is False:
             if self.spiel.getTurn() is True:
-                if self.locked is True and self.__isInArray(self.spiel.getPositionKI(), j, i):
+                if self.locked is True and self.__isInArray(self.spiel.getPositionKI(), j, i) and self.__isInArray(self.spiel.get_possible_moves_clicked(self.lockedJ, self.lockedI), j, i):
                     self.locked = False
                     self.gameHandler(self.lockedJ, self.lockedI, j, i)
                     self.resetBoard()
