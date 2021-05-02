@@ -29,7 +29,7 @@ class KI:
             for col in range(len(self.spiel.board)):
                 if self.spiel.board[row][col] == " ":
                     self.spiel.board[row][col] = "o"
-                    score = self.minimax(0, False) 
+                    score = self.minimax(0, True) 
                     self.spiel.board[row][col] = " "
                     if (score > bestScore):
                         bestScore = score
