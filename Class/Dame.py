@@ -7,7 +7,7 @@ class Dame:
 
     # Feld initialisieren, aktuellen Spieler auf 'x' setzen
     def __init__(self):
-        self.startKI = [[3, 3], [1, 1], [0, 2], [1, 3], [0, 4], [3, 1]]
+        self.startKI = [[0, 0], [1, 1], [0, 2], [1, 3], [0, 4], [1, 5]]
         self.startPlayer = [[4, 0], [5, 1], [4, 2], [5, 3], [4, 4], [5, 5]]
         self.doubleMove = False
         self.doubleMovePos = []
@@ -15,17 +15,17 @@ class Dame:
         # class-Variable für mögliche winning-condition
         self.end_game = [False, '']
 
-        self.board = [[' ', ' ', 'o', ' ', 'o', ' '],
-                      [' ', 'o', ' ', 'o', ' ', ' '],
+        self.board = [['o', ' ', 'o', ' ', 'o', ' '],
+                      [' ', 'o', ' ', 'o', ' ', 'o'],
                       [' ', ' ', ' ', ' ', ' ', ' '],
-                      [' ', 'o', ' ', 'o', ' ', ' '],
+                      [' ', ' ', ' ', ' ', ' ', ' '],
                       ['x', ' ', 'x', ' ', 'x', ' '],
                       [' ', 'x', ' ', 'x', ' ', 'x']]
         self.length = 6
         self.current_player = "x"
 
     def newGame(self):
-        self.startKI = [[3, 3], [1, 1], [0, 2], [1, 3], [0, 4], [3, 1]]
+        self.startKI = [[0, 0], [1, 1], [0, 2], [1, 3], [0, 4], [1, 5]]
         self.startPlayer = [[4, 0], [5, 1], [4, 2], [5, 3], [4, 4], [5, 5]]
         self.doubleMove = False
         self.doubleMovePos = []
@@ -33,10 +33,10 @@ class Dame:
         # class-Variable für mögliche winning-condition
         self.end_game = [False, '']
 
-        self.board = [[' ', ' ', 'o', ' ', 'o', ' '],
-                      [' ', 'o', ' ', 'o', ' ', ' '],
+        self.board = [['o', ' ', 'o', ' ', 'o', ' '],
+                      [' ', 'o', ' ', 'o', ' ', 'o'],
                       [' ', ' ', ' ', ' ', ' ', ' '],
-                      [' ', 'o', ' ', 'o', ' ', ' '],
+                      [' ', ' ', ' ', ' ', ' ', ' '],
                       ['x', ' ', 'x', ' ', 'x', ' '],
                       [' ', 'x', ' ', 'x', ' ', 'x']]
         self.length = 6
