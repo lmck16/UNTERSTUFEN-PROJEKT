@@ -14,16 +14,20 @@ class KI:
 
     def move_computer_random(self):
 
-        KI_BEST_MOVE = self.minimax(self.spiel.getPositionKI(), self.spiel.getPositionPlayer(), 2, True)[1]
-        z = deepcopy(self.spiel.getPositionKI())
+        if self.spiel.getDisplayname() == "Tic Tac Toe":
+            possible_moves = self.spiel.get_all_possible_moves()
+            self.spiel.makeMove(random.choice(possible_moves))
+        else:
+            KI_BEST_MOVE = self.minimax(self.spiel.getPositionKI(), self.spiel.getPositionPlayer(), 2, True)[1]
+            z = deepcopy(self.spiel.getPositionKI())
 
-        for x in self.spiel.getPositionKI():
-            for y in KI_BEST_MOVE:
-                if x == y:
-                    KI_BEST_MOVE.remove(x)
-                    z.remove(x)
-        make_move=[z[0],KI_BEST_MOVE[0]]
-        self.spiel.makeMove(make_move)
+            for x in self.spiel.getPositionKI():
+                for y in KI_BEST_MOVE:
+                    if x == y:
+                        KI_BEST_MOVE.remove(x)
+                        z.remove(x)
+            make_move=[z[0],KI_BEST_MOVE[0]]
+            self.spiel.makeMove(make_move)
 
     def evaluate(self, ki, player):
         return len(ki) - len(player)
