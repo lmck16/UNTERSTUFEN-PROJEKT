@@ -138,8 +138,6 @@ class Dame:
             return True
         return False
 
-    # TODO: rekursion einbauen
-    # TODO: minimax?!
     def makeMove(self, move):
         start = [move[0][0], move[0][1]]
         end = [move[1][0], move[1][1]]
@@ -157,8 +155,8 @@ class Dame:
             self.board[(end[0] + start[0]) // 2][(end[1] + start[1]) // 2] = ' '
             if len(self.get_possible_moves_with_enemy(end[0], end[1])) > 0:
                 self.doubleMove = True
-        else:
-            self.doubleMove = False
+            else:
+                self.doubleMove = False
 
         # Nach jedem Zug den aktuellen Spieler wechseln
         if self.doubleMove is False:

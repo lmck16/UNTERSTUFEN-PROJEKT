@@ -31,8 +31,6 @@ class Layout(tk.Tk):
         self.lockedI = 0
         self.lockedJ = 0
 
-        self.turn = True  # TRUE = USER / FALSE = KI
-
         self.end = False
 
         self.spiel = spiel
@@ -138,9 +136,6 @@ class Layout(tk.Tk):
         self.drawboard()
         if noFigures is False: self.initFigures(self.spiel.getPositionKI(), self.spiel.getPositionPlayer())
 
-        # self.locked = False
-        # self.turn = not self.turn
-
     def __setFigures(self, location, color):
         for i in range(len(location)):
             self.__drawFigures(location[i][1], location[i][0], color)
@@ -237,6 +232,8 @@ class Layout(tk.Tk):
                     self.__figurePressed(event, j, i, "#ffffff")
                 if self.spiel.getTurn() is False:
                     self.KI.move_computer_random()
+                    if self.spiel.doubleMove is True:
+                        self.KI.move_computer_random()
                     self.resetBoard()
                     self.__checkWin()
 
