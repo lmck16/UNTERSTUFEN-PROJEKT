@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 class TicTacToe:
 
     displayname = "Tic Tac Toe"
@@ -11,7 +13,7 @@ class TicTacToe:
         self.positionKI = []   
         self.positionPlayer = []
         self.turn = True # TRUE = PLAYER / FALSE = KI
-
+        self.lastMove = None
         self.board = [[" " for row in range(self.n)] for col in range(self.n)]
         self.genBoard()
 
@@ -19,7 +21,8 @@ class TicTacToe:
         self.positionKI = []
         self.positionPlayer = []
         self.board = [[" " for row in range(self.n)] for col in range(self.n)]
-        self.turn = True
+        self.lastMove = None
+        self.turn = True # TRUE = PLAYER / FALSE = KI
 
     def getDisplayname(self):
         return self.displayname
@@ -48,86 +51,145 @@ class TicTacToe:
     def nextTurn(self):
         return self.turn
 
-    def checkBlocked2(self, row, col, sym):
+    def checkBlocked2(self, brd, row, col, sym):
         if row is None and col is None: return False
+        con = len(brd) - 2
+        #print(brd)
+        #print(con)
         if row > 1:
-            if self.board[row-1][col] == sym and self.board[row-2][col] == sym: return True
-        elif row < 4:
-            if self.board[row+1][col] == sym and self.board[row+2][col] == sym: return True
-        elif col > 1:
-            if self.board[row][col-1] == sym and self.board[row][col-2] == sym: return True
-        elif col < 4:
-            if self.board[row][col+1] == sym and self.board[row][col+2] == sym: return True
-        elif row > 1 and col > 1:
-            if self.board[row-1][col-1] == sym and self.board[row-2][col-2] == sym: return True
-        elif row < 4 and col < 4:
-            if self.board[row+1][col+1] == sym and self.board[row+2][col+2] == sym: return True
-        elif row > 1 and col < 4:
-            if self.board[row-1][col+1] == sym and self.board[row-2][col+2] == sym: return True
-        elif row < 4 and col > 1:
-            if self.board[row+1][col-1] == sym and self.board[row+2][col-2] == sym: return True
+            if brd[row-1][col] == sym and brd[row-2][col] == sym: 
+                print("1")
+                return True
+        if row < con:
+            if brd[row+1][col] == sym and brd[row+2][col] == sym: 
+                print("2")
+                return True
+        if col > 1:
+            if brd[row][col-1] == sym and brd[row][col-2] == sym:
+                print("3")
+                return True
+        if col < con:
+            if brd[row][col+1] == sym and brd[row][col+2] == sym: 
+                print("4")
+                return True
+        if row > 1 and col > 1:
+            if brd[row-1][col-1] == sym and brd[row-2][col-2] == sym: 
+                print("5")
+                return True
+        if row < con and col < con:
+            if brd[row+1][col+1] == sym and brd[row+2][col+2] == sym: 
+                print("6")
+                return True
+        if row > 1 and col < con:
+            if brd[row-1][col+1] == sym and brd[row-2][col+2] == sym: 
+                print("7")
+                return True
+        if row < con and col > 1:
+            if brd[row+1][col-1] == sym and brd[row+2][col-2] == sym: 
+                print("8")
+                return True
         return False
 
-    def checkBlocked3(self, row, col, sym):
+    def checkBlocked3(self, brd, row, col, sym):
         if row is None and col is None: return False
+        con = len(brd) - 3
+        #print(con)
         if row > 2:
-            if self.board[row-1][col] == sym and self.board[row-2][col] == sym and self.board[row-3][col] == sym: return True
-        elif row < 3:
-            if self.board[row+1][col] == sym and self.board[row+2][col] == sym and self.board[row+3][col] == sym: return True
-        elif col > 2:
-            if self.board[row][col-1] == sym and self.board[row][col-2] == sym and self.board[row][col-3] == sym: return True
-        elif col < 3:
-            if self.board[row][col+1] == sym and self.board[row][col+2] == sym and self.board[row][col+3] == sym: return True
-        elif row > 2 and col > 2:
-            if self.board[row-1][col-1] == sym and self.board[row-2][col-2] == sym and self.board[row-3][col-3] == sym: return True
-        elif row < 3 and col < 3:
-            if self.board[row+1][col+1] == sym and self.board[row+2][col+2] == sym and self.board[row+3][col+3] == sym: return True
-        elif row > 2 and col < 3:
-            if self.board[row-1][col+1] == sym and self.board[row-2][col+2] == sym and self.board[row-3][col+3] == sym: return True
-        elif row < 3 and col > 2:
-            if self.board[row+1][col-1] == sym and self.board[row+2][col-2] == sym and self.board[row+3][col-3] == sym: return True
+            if brd[row-1][col] == sym and brd[row-2][col] == sym and brd[row-3][col] == sym: return True
+        if row < con:
+            if brd[row+1][col] == sym and brd[row+2][col] == sym and brd[row+3][col] == sym: return True
+        if col > 2:
+            if brd[row][col-1] == sym and brd[row][col-2] == sym and brd[row][col-3] == sym: return True
+        if col < con:
+            if brd[row][col+1] == sym and brd[row][col+2] == sym and brd[row][col+3] == sym: return True
+        if row > 2 and col > 2:
+            if brd[row-1][col-1] == sym and brd[row-2][col-2] == sym and brd[row-3][col-3] == sym: return True
+        if row < con and col < con:
+            if brd[row+1][col+1] == sym and brd[row+2][col+2] == sym and brd[row+3][col+3] == sym: return True
+        if row > 2 and col < con:
+            if brd[row-1][col+1] == sym and brd[row-2][col+2] == sym and brd[row-3][col+3] == sym: return True
+        if row < con and col > 2:
+            if brd[row+1][col-1] == sym and brd[row+2][col-2] == sym and brd[row+3][col-3] == sym: return True
         return False
 
-    def checkBetween(self, row, col, sym):
+    def checkBetween(self, brd, row, col, sym):
         if row is None and col is None: return False
-        if row > 1 and row < 4:
-            if self.board[row-1][col] == sym and self.board[row+1][col] == sym: return True
-        if col > 1 and col < 4:
-            if self.board[row][col-1] == sym and self.board[row][col+1] == sym: return True
-        if col > 1 and row > 1 and col < 4 and row < 4:
-            if self.board[row-1][col-1] == sym and self.board[row+1][col+1] == sym: return True
-        if col > 1 and row > 1 and col < 4 and row < 4:
-            if self.board[row+1][col-1] == sym and self.board[row-1][col+1] == sym: return True
-        
+        con = len(brd) - 1
+        if row > 1 and row < con:
+            if brd[row-1][col] == sym and brd[row+1][col] == sym: return True
+        if col > 1 and col < con:
+            if brd[row][col-1] == sym and brd[row][col+1] == sym: return True
+        if col > 1 and row > 1 and col < con and row < con:
+            if brd[row-1][col-1] == sym and brd[row+1][col+1] == sym: return True
+        if col > 1 and row > 1 and col < con and row < con:
+            if brd[row+1][col-1] == sym and brd[row-1][col+1] == sym: return True
+        return False
 
-
-
-    def checkDraw(self):
-        for row in range(len(self.board)):
-                for col in range(len(self.board)):
-                    if self.board[row][col] == " ":
+    def checkDraw(self, brd = None):
+        if brd is None: brd = self.board
+        for row in range(len(brd)):
+                for col in range(len(brd)):
+                    if brd[row][col] == " ":
                         return False   
         return True
 
-    def checkWinForMark(self, sym):
-        if sym == "x" and self.turn is False and self.checkWin(): 
+    def getPerformanceBoard(self):
+        lastRow = self.lastMove[0]
+        lastCol = self.lastMove[1]
+
+        board = deepcopy(self.board)
+
+        if lastRow in (0,1,2) and lastCol in (0,1,2): 
+            for i in range(self.n):
+                board[i][4] = "o"
+                board[i][5] = "o"
+                board[4][i] = "o"
+                board[5][i] = "o"      
+            return board
+        elif lastRow in (0,1,2) and lastCol in (3,4,5): 
+            for i in range(self.n):
+                board[i][0] = "o"
+                board[i][1] = "o"
+                board[4][i] = "o"
+                board[5][i] = "o"
+            return board
+        elif lastRow in (3,4,5) and lastCol in (0,1,2): 
+            for i in range(self.n):
+                board[i][4] = "o"
+                board[i][5] = "o"
+                board[0][i] = "o"
+                board[1][i] = "o"
+            return board
+        elif lastRow in (3,4,5) and lastCol in (3,4,5): 
+            for i in range(self.n):
+                board[i][0] = "o"
+                board[i][1] = "o"
+                board[0][i] = "o"
+                board[1][i] = "o"
+            return board
+        else: return None
+
+    def checkWinForMark(self, board, sym):
+        if sym == "x" and self.turn is False and self.checkWin(board): 
             return True
-        elif sym == "o" and self.turn is True and self.checkWin(): 
+        elif sym == "o" and self.turn is True and self.checkWin(board): 
             return True
         else: 
             return False
 
-    def get_all_possible_moves(self):
+    def get_all_possible_moves(self, board = None):
+        if board is None: board = self.board
         returnArr = []
-        for row in range(self.n):
-            for col in range(self.n):
-                if self.board[row][col] == " ":
+        for row in range(len(board)):
+            for col in range(len(board)):
+                if board[row][col] == " ":
                     returnArr.append([row, col])
         return returnArr
 
     def makeMove(self, move):
         if self.turn:
             self.positionPlayer.append(move)
+            self.lastMove = move
             self.turn = False
         else:
             self.positionKI.append(move)
@@ -152,33 +214,35 @@ class TicTacToe:
             return board[0][len(board)-1]
         return 0
 
-    def checkWin(self):
-        if self.checkRowForWin() or self.checkColForWin() or self.checkDiaForWin(): return True
+    def checkWin(self, board = None):
+        if board is None: board = self.board
+        if self.checkRowForWin(board) or self.checkColForWin(board) or self.checkDiaForWin(board): return True
         return False
 
-    def checkDiaForWin(self):
-        for row in range(len(self.board)):
-                for i in range(3):
-                    if self.board[row][i] != " ":
-                        for j in range(4):
-                            if self.board[row][i] != self.board[row+j if row <= 2 else row-j][j+i]: break
-                            if j == 3: return True
-
-    def checkRowForWin(self):
-        for row in range(len(self.board)):
+    def checkDiaForWin(self, board):
+        for row in range(len(board)):
             for i in range(3):
-                if self.board[row][i] != " ":
+                if board[row][i] != " ":
                     for j in range(4):
-                        if self.board[row][i] != self.board[row][j+i]: break
+                        if board[row][i] != board[row+j if row <= 2 else row-j][j+i]: break
                         if j == 3: return True
         return False
 
-    def checkColForWin(self):
-        for col in range(len(self.board)):
+    def checkRowForWin(self, board):
+        for row in range(len(board)):
             for i in range(3):
-                if self.board[i][col] != " ":
+                if board[row][i] != " ":
                     for j in range(4):
-                        if self.board[i][col] != self.board[j+i][col]: break
+                        if board[row][i] != board[row][j+i]: break
+                        if j == 3: return True
+        return False
+
+    def checkColForWin(self, board):
+        for col in range(len(board)):
+            for i in range(3):
+                if board[i][col] != " ":
+                    for j in range(4):
+                        if board[i][col] != board[j+i][col]: break
                         if j == 3: return True
         return False
 
@@ -187,7 +251,6 @@ class TicTacToe:
             if arr[x][0] == row and arr[x][1] == col:
                 return True
         return False
-
 
     
 
