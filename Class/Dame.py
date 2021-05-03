@@ -49,9 +49,9 @@ class Dame:
         return self.startKI
 
     def checkWinForMark(self, sym):
-        if sym == "x" and self.turn is False and self.checkWin(): 
+        if sym == "x" and self.getTurn() is False and self.checkWin():
             return True
-        elif sym == "o" and self.turn is True and self.checkWin(): 
+        elif sym == "o" and self.getTurn() is True and self.checkWin():
             return True
         else: 
             return False
@@ -272,6 +272,51 @@ class Dame:
         for row in range(len(self.board)):
             for col in range(len(self.board[row])):
                 if self.board[row][col].lower() == self.current_player:
+                    for index in range(4):
+                        if self.board[row][col].islower() and index > 1:
+                            continue
+
+                        new_row = row + neighbors[index][0]
+                        new_col = col + neighbors[index][1]
+                        if 0 <= new_row < len(self.board) and 0 <= new_col < len(self.board[row]):
+                            # alle möglichen Züge OHNE gegnerischen Kontakt der Liste hinzufügen
+                            if self.board[new_row][new_col] == ' ':
+                                possible_moves.append([[row, col], [new_row, new_col]])
+                            # wenn ein Gegner geschlagen werden kann wird eine seperate Liste erstellt
+                            elif self.board[new_row][new_col].lower() == enemy_player:
+                                new_row = new_row + neighbors[index][0]
+                                new_col = new_col + neighbors[index][1]
+                                if 0 <= new_row < len(self.board) and 0 <= new_col < len(self.board[row]) and \
+                                        self.board[new_row][new_col] == ' ':
+                                    possible_moves_with_enemy.append([[row, col], [new_row, new_col]])
+
+        # wenn ein Gegner geschlagen werden kann, dann muss dies priorisiert werden
+        if len(possible_moves_with_enemy) > 0:
+            return possible_moves_with_enemy
+        else:
+            return possible_moves
+
+    def getAllPossibleMovesMark(self, sym):
+        # Wert der Figuren des anderen Spielers setzen
+        if sym == 'o':
+            enemy_player = 'x'
+        else:
+            enemy_player = 'o'
+
+        # Koordinaten aller möglichen Nachbarn der aktuellen Position
+        if sym == 'x':
+            neighbors = [[-1, -1], [-1, 1], [1, -1], [1, 1]]
+        else:
+            neighbors = [[1, -1], [1, 1], [-1, -1], [-1, 1]]
+
+        # Liste für normale Züge
+        possible_moves = []
+        # zweite Liste, falls ein Gegner in diesem Zug geschlagen werden kann
+        possible_moves_with_enemy = []
+        # für alle Elemente innerhalb des Feldes
+        for row in range(len(self.board)):
+            for col in range(len(self.board[row])):
+                if self.board[row][col].lower() == sym:
                     for index in range(4):
                         if self.board[row][col].islower() and index > 1:
                             continue
