@@ -95,6 +95,20 @@ class PawnChess:
             return self.end_game[1]
         return None
 
+    def gameOver(self):
+        if self.checkWinForMark("o"): return True
+        if self.checkWinForMark("x"): return True
+        
+        return False
+
+    def checkWinForMark(self, sym):
+        if sym == "x" and self.getTurn() is False and self.checkWin():
+            return True
+        elif sym == "o" and self.getTurn() is True and self.checkWin():
+            return True
+        else: 
+            return False
+
     def get_movable_figures(self):
         possible_moves = self.get_all_possible_moves()
         movable_figures = [i[0] for i in possible_moves]
@@ -155,6 +169,34 @@ class PawnChess:
         for row in range(len(self.board)):
             for col in range(len(self.board[row])):
                 if self.board[row][col].lower() == self.current_player:
+                    for index in range(3):
+                        new_row = row + neighbours[index][0]
+                        new_col = col + neighbours[index][1]
+                        if 0 <= new_row < len(self.board) and 0 <= new_col < len(self.board[row]):
+                            if index == 1 and self.board[new_row][new_col] == ' ':
+                                possibleMoves.append([[row, col], [new_row, new_col]])
+                            if index == 0 and self.board[new_row][new_col] == enemy_player:
+                                possibleMoves.append([[row, col], [new_row, new_col]])
+                            if index == 2 and self.board[new_row][new_col] == enemy_player:
+                                possibleMoves.append([[row, col], [new_row, new_col]])
+        return possibleMoves
+
+    def getAllPossibleMovesMark(self, sym):   
+        if sym == "o":
+            enemy_player = "x"
+        else:
+            enemy_player = "o"
+        
+        if sym == 'x':
+            neighbours = [[-1, -1], [-1, 0], [-1, 1]]
+        else:
+            neighbours = [[1, -1], [1, 0], [1, 1]]
+        
+        possibleMoves = []
+       
+        for row in range(len(self.board)):
+            for col in range(len(self.board[row])):
+                if self.board[row][col].lower() == sym:
                     for index in range(3):
                         new_row = row + neighbours[index][0]
                         new_col = col + neighbours[index][1]
