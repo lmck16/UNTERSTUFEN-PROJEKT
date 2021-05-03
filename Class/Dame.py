@@ -48,6 +48,12 @@ class Dame:
     def getStartKI(self):
         return self.startKI
 
+    def gameOver(self):
+        if self.checkWinForMark("o"): return True
+        if self.checkWinForMark("x"): return True
+        
+        return False
+
     def checkWinForMark(self, sym):
         if sym == "x" and self.getTurn() is False and self.checkWin():
             return True
