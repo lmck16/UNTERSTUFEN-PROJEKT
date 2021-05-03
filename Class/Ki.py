@@ -14,7 +14,7 @@ class KI:
 
     def move_computer_random(self):
 
-        KI_BEST_MOVE = self.minimax(self.spiel.getPositionKI(), self.spiel.getPositionPlayer(), 5, True)[1]
+        KI_BEST_MOVE = self.minimax(self.spiel.getPositionKI(), self.spiel.getPositionPlayer(), 2, True)[1]
         z = deepcopy(self.spiel.getPositionKI())
 
         for x in self.spiel.getPositionKI():
